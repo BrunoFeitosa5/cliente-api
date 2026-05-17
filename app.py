@@ -12,7 +12,8 @@ app.config["JWT_SECRET_KEY"] = "minha-chave-secreta"
 jwt = JWTManager(app)
 
 # banco
-init_db()
+with app.app_context():
+    init_db()
 
 # rotas API
 app.register_blueprint(clientes_bp)
