@@ -3,6 +3,7 @@ from flask_jwt_extended import JWTManager
 from database.db import init_db
 from routes.clientes import clientes_bp
 from flask_cors import CORS
+import os
 
 app = Flask(__name__)
 
@@ -28,8 +29,3 @@ def home():
 @app.route("/painel")
 def painel():
     return render_template("index.html")
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
-    
-  
