@@ -30,3 +30,21 @@ Projeto backend desenvolvido em Flask com foco em API REST, autenticação JWT e
 ---
 
 ## 📁 Estrutura do projeto
+
+client-api/
+├── app.py
+├── database/
+├── models/
+├── routes/
+├── frontend/
+├── requirements.txt
+└── README.md
+
+
+---
+
+## ▶️ Como rodar o projeto
+
+### 1. Clonar repositório
+```bash
+git clone https://github.com/BrunoFeitosa5/cliente-api.git
