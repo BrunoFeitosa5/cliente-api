@@ -1,4 +1,5 @@
-flask==3.0.3
+flask
 gunicorn
 flask-jwt-extended
 flask-cors
+bcrypt
