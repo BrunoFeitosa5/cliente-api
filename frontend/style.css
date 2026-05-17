@@ -1,0 +1,95 @@
+body {
+    background-color: #0f0f0f;
+    color: #ffffff;
+}
+
+/* TITULOS CORRETOS */
+h1, h2, h3, h4, h5 {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+/* CARDS */
+.card {
+    background-color: #1a1a1a;
+    border: 1px solid #2a2a2a;
+}
+
+.card h6 {
+    color: #dbd6d6;
+    font-weight: 600;
+    opacity: 1;
+}
+
+.card h2 {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.card {
+    text-align: center;
+}
+
+/* INPUTS */
+.form-control {
+    background-color: #111;
+    color: #ffffff;
+    border: 1px solid #333;
+}
+
+.form-control::placeholder {
+    color: #bbbbbb;
+}
+
+.form-control:focus {
+    background-color: #111;
+    color: #ffffff;
+    border-color: #00ff88;
+    box-shadow: none;
+}
+
+/* TABELA */
+table {
+    color: #ffffff;
+}
+
+thead th {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+tbody td {
+    color: #ffffff;
+    vertical-align: middle;
+}
+
+/* BOTÕES */
+.btn-success {
+    background-color: #00ff88;
+    border: none;
+    color: black;
+}
+
+.btn-primary {
+    background-color: #00aaff;
+    border: none;
+    color: white;
+}
+
+.btn-danger {
+    background-color: #ff3b3b;
+    border: none;
+    color: white;
+}
+
+/* BOTÕES AGRUPADOS */
+.action-btns {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-sm {
+    min-width: 80px;
+}

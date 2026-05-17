@@ -1,0 +1,20 @@
+[
+    {
+        "id": 1,
+        "nome": "Bruno Feitosa ",
+        "email": "bruno@remail.com",
+        "telefone": "(11) 97594-6031",
+        "empresa": "Renov Smart Tech",
+        "cargo": "Apoio a vendas/Desenvolvedor Junior",
+        "criado_em": "12/05/2026 21:32:06"
+    },
+    {
+        "id": 2,
+        "nome": "Rian da Silva Feitosa ",
+        "email": "rian@remail.com",
+        "telefone": "(11) 4002-8922",
+        "empresa": "Renov Smart",
+        "cargo": "Aprendiz",
+        "criado_em": "12/05/2026 21:32:06"
+    }
+]
