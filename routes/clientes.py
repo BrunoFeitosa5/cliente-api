@@ -137,9 +137,10 @@ def buscar_cliente(id):
 
 # =============================================================
 # CRIAR CLIENTE
-# TEMPORARIAMENTE LIVRE
+# SOMENTE ADMIN
 # =============================================================
 @clientes_bp.route("/clientes", methods=["POST"])
+@jwt_required()
 def criar_cliente():
 
     data=request.json
