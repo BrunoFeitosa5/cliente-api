@@ -20,7 +20,7 @@ async function fazerLogin() {
 
     const data = await res.json();
 
-    if (res.ok){
+    if(res.ok){
 
         localStorage.setItem(
             "token",
@@ -29,17 +29,18 @@ async function fazerLogin() {
 
         document.getElementById(
             "areaAdmin"
-        ).style.display = "block";
-
-        alert("Login realizado");
+        ).style.display="block";
 
         carregarClientes();
 
-    } else {
+        alert("Login realizado");
+
+    }else{
 
         alert(data.erro);
 
     }
+
 }
 
 
@@ -62,18 +63,25 @@ async function carregarClientes(){
     total.innerText=
     clientes.length;
 
-
     const token =
     localStorage.getItem("token");
 
 
     clientes.forEach(c=>{
 
-        let botoes = "";
+        let botoes="";
 
         if(token){
 
             botoes=`
+
+            <button
+            class="btn btn-warning btn-sm"
+            onclick="editarCliente(${c.id})">
+
+            Editar
+
+            </button>
 
             <button
             class="btn btn-danger btn-sm"
@@ -93,15 +101,30 @@ async function carregarClientes(){
 
         <td>${c.id}</td>
 
-        <td>${c.nome}</td>
+        <td contenteditable="${token ? true : false}"
+        id="nome-${c.id}">
+        ${c.nome}
+        </td>
 
-        <td>${c.email}</td>
+        <td contenteditable="${token ? true : false}"
+        id="email-${c.id}">
+        ${c.email}
+        </td>
 
-        <td>${c.telefone}</td>
+        <td contenteditable="${token ? true : false}"
+        id="telefone-${c.id}">
+        ${c.telefone}
+        </td>
 
-        <td>${c.empresa}</td>
+        <td contenteditable="${token ? true : false}"
+        id="empresa-${c.id}">
+        ${c.empresa}
+        </td>
 
-        <td>${c.horario}</td>
+        <td contenteditable="${token ? true : false}"
+        id="horario-${c.id}">
+        ${c.horario}
+        </td>
 
         <td>
 
@@ -118,12 +141,10 @@ async function carregarClientes(){
 }
 
 
-
 async function criarCliente(){
 
     const token =
     localStorage.getItem("token");
-
 
     const cliente={
 
@@ -146,7 +167,6 @@ async function criarCliente(){
         document.getElementById("senha").value
 
     };
-
 
     await fetch("/clientes",{
 
@@ -171,11 +191,71 @@ async function criarCliente(){
 
 
 
-async function deletarCliente(id){
+async function editarCliente(id){
 
     const token =
     localStorage.getItem("token");
 
+
+    const cliente={
+
+        nome:
+        document.getElementById(
+        `nome-${id}`
+        ).innerText,
+
+        email:
+        document.getElementById(
+        `email-${id}`
+        ).innerText,
+
+        telefone:
+        document.getElementById(
+        `telefone-${id}`
+        ).innerText,
+
+        empresa:
+        document.getElementById(
+        `empresa-${id}`
+        ).innerText,
+
+        horario:
+        document.getElementById(
+        `horario-${id}`
+        ).innerText
+
+    };
+
+
+    await fetch(`/clientes/${id}`,{
+
+        method:"PUT",
+
+        headers:{
+
+            "Content-Type":"application/json",
+
+            "Authorization":
+            `Bearer ${token}`
+
+        },
+
+        body:JSON.stringify(cliente)
+
+    });
+
+    alert("Atualizado");
+
+    carregarClientes();
+
+}
+
+
+
+async function deletarCliente(id){
+
+    const token =
+    localStorage.getItem("token");
 
     await fetch(`/clientes/${id}`,{
 
@@ -195,10 +275,11 @@ async function deletarCliente(id){
 }
 
 
+
 if(localStorage.getItem("token")){
 
     document.getElementById(
-        "areaAdmin"
+    "areaAdmin"
     ).style.display="block";
 
 }
