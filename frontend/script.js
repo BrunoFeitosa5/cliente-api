@@ -20,7 +20,7 @@ async function fazerLogin() {
 
         carregarClientes();
 
-        alert("Login realizado com sucesso");
+        alert("Login realizado");
 
     } else {
         alert(data.erro);
@@ -31,27 +31,19 @@ function sair() {
 
     const tipo = localStorage.getItem("tipoUsuario");
 
-    // limpa tudo
     localStorage.removeItem("token");
     localStorage.removeItem("tipoUsuario");
 
-    // limpa inputs login
     document.getElementById("loginEmail").value = "";
     document.getElementById("loginSenha").value = "";
 
-    // esconde área admin
     document.getElementById("areaAdmin").style.display = "none";
 
-    // recarrega lista SEM permissões
     carregarClientes();
 
-    // comportamento diferente por tipo
     if (tipo === "admin") {
-
-        alert("Você saiu do modo administrador");
-
+        alert("Saiu do modo administrador");
     } else {
-
         window.location.href = "https://www.google.com/search?q=";
     }
 }
@@ -159,5 +151,4 @@ async function deletarCliente(id) {
     carregarClientes();
 }
 
-// inicialização
 carregarClientes();
