@@ -17,50 +17,45 @@ clientes_bp = Blueprint("clientes", __name__)
 @clientes_bp.route("/login", methods=["POST"])
 def login():
 
-    data = request.json
+    data = request.get_json()
 
     email = data.get("email")
     senha = data.get("senha")
 
     conn = get_connection()
-    cursor = conn.cursor()
 
-    cursor.execute(
+    cliente = conn.execute(
         "SELECT * FROM clientes WHERE email=?",
         (email,)
-    )
-
-    cliente = cursor.fetchone()
+    ).fetchone()
 
     conn.close()
 
     if not cliente:
         return jsonify({
-            "erro":"Usuário não encontrado"
-        }),404
-
+            "erro": "Usuário não encontrado"
+        }), 404
 
     cliente = dict(cliente)
 
+    # Converter senha do banco para bytes
+    senha_hash = cliente["senha"].encode("utf-8")
+
     if not bcrypt.checkpw(
         senha.encode("utf-8"),
-        cliente["senha"].encode("utf-8")
+        senha_hash
     ):
-
         return jsonify({
-            "erro":"Senha inválida"
-        }),401
+            "erro": "Senha inválida"
+        }), 401
 
-
-    token = create_access_token(
-        identity=cliente["email"]
+    access_token = create_access_token(
+        identity=str(cliente["id"])
     )
 
-
     return jsonify({
-        "token":token
-    })
-
+        "access_token": access_token
+    }), 200
 
 # =============================================================
 # LISTAR CLIENTES
