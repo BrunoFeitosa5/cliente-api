@@ -1,124 +1,154 @@
-const API = "http://127.0.0.1:5000";
+async function carregarClientes() {
 
-// =====================
-// LISTAR
-// =====================
-async function listar() {
-    try {
-        let res = await fetch(`${API}/clientes`);
-        let data = await res.json();
+    const resposta = await fetch("/clientes");
+    const dados = await resposta.json();
 
-        let tabela = document.getElementById("tabela");
-        tabela.innerHTML = "";
+    const clientes = dados.clientes;
 
-        (data.clientes || []).forEach(c => {
-            tabela.innerHTML += `
-                <tr>
-                    <td>${c.id}</td>
+    const tabela = document.getElementById("tabela");
+    const total = document.getElementById("totalClientes");
 
-                    <td><input value="${c.nome}" id="nome-${c.id}" class="form-control"></td>
-                    <td><input value="${c.email}" id="email-${c.id}" class="form-control"></td>
-                    <td><input value="${c.telefone}" id="telefone-${c.id}" class="form-control"></td>
-                    <td><input value="${c.empresa}" id="empresa-${c.id}" class="form-control"></td>
-                    <td><input value="${c.horario}" id="horario-${c.id}" class="form-control"></td>
+    tabela.innerHTML = "";
+    total.innerText = clientes.length;
 
-                    <td>
-                        <div class="action-btns">
-                            <button class="btn btn-primary btn-sm" onclick="atualizar(${c.id})">Editar</button>
-                            <button class="btn btn-danger btn-sm" onclick="deletar(${c.id})">Excluir</button>
-                        </div>
-                    </td>
-                </tr>
-            `;
-        });
+    clientes.forEach(cliente => {
 
-        // atualizar contador do dashboard
-        document.getElementById("totalClientes").innerText =
-            (data.clientes || []).length;
+        tabela.innerHTML += `
+        <tr>
 
-    } catch (error) {
-        console.log("Erro ao listar clientes:", error);
-        alert("Erro ao carregar dados da API");
-    }
+            <td>${cliente.id}</td>
+
+            <td contenteditable="true"
+                onblur="salvarCampo(${cliente.id}, 'nome', this.innerText)">
+                ${cliente.nome}
+            </td>
+
+            <td contenteditable="true"
+                onblur="salvarCampo(${cliente.id}, 'email', this.innerText)">
+                ${cliente.email}
+            </td>
+
+            <td contenteditable="true"
+                onblur="salvarCampo(${cliente.id}, 'telefone', this.innerText)">
+                ${cliente.telefone}
+            </td>
+
+            <td contenteditable="true"
+                onblur="salvarCampo(${cliente.id}, 'empresa', this.innerText)">
+                ${cliente.empresa}
+            </td>
+
+            <td contenteditable="true"
+                onblur="salvarCampo(${cliente.id}, 'horario', this.innerText)">
+                ${cliente.horario}
+            </td>
+
+            <td>
+
+                <button
+                    class="btn btn-danger btn-sm"
+                    onclick="deletarCliente(${cliente.id})">
+
+                    Excluir
+
+                </button>
+
+            </td>
+
+        </tr>
+        `;
+    });
 }
 
-// =====================
-// CRIAR
-// =====================
-async function criarCliente() {
 
-    try {
-        let data = {
-            nome: document.getElementById("nome").value,
-            email: document.getElementById("email").value,
-            telefone: document.getElementById("telefone").value,
-            empresa: document.getElementById("empresa").value,
-            horario: document.getElementById("horario").value,
-            senha: document.getElementById("senha").value
-        };
 
-        await fetch(`${API}/clientes`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data)
-        });
+async function salvarCampo(id, campo, valor){
 
-        listar();
-        alert("Cliente adicionado com sucesso!");
+    const resposta = await fetch(`/clientes/${id}`);
+    const cliente = await resposta.json();
 
-    } catch (error) {
-        console.log(error);
-        alert("Erro ao criar cliente");
-    }
+    cliente[campo] = valor;
+
+    await fetch(`/clientes/${id}`,{
+
+        method:"PUT",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify(cliente)
+
+    });
+
 }
 
-// =====================
-// ATUALIZAR
-// =====================
-async function atualizar(id) {
 
-    try {
-        let data = {
-            nome: document.getElementById(`nome-${id}`).value,
-            email: document.getElementById(`email-${id}`).value,
-            telefone: document.getElementById(`telefone-${id}`).value,
-            empresa: document.getElementById(`empresa-${id}`).value,
-            horario: document.getElementById(`horario-${id}`).value
-        };
 
-        await fetch(`${API}/clientes/${id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data)
-        });
+async function criarCliente(){
 
-        listar();
-        alert("Atualizado com sucesso!");
+    const cliente = {
 
-    } catch (error) {
-        console.log(error);
-        alert("Erro ao atualizar cliente");
-    }
+        nome: document.getElementById("nome").value,
+
+        email: document.getElementById("email").value,
+
+        telefone: document.getElementById("telefone").value,
+
+        empresa: document.getElementById("empresa").value,
+
+        horario: document.getElementById("horario").value,
+
+        senha: document.getElementById("senha").value
+
+    };
+
+
+    await fetch("/clientes",{
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify(cliente)
+
+    });
+
+
+    limparCampos();
+
+    carregarClientes();
+
 }
 
-// =====================
-// DELETAR
-// =====================
-async function deletar(id) {
 
-    try {
-        await fetch(`${API}/clientes/${id}`, {
-            method: "DELETE"
-        });
 
-        listar();
-        alert("Cliente removido!");
+async function deletarCliente(id){
 
-    } catch (error) {
-        console.log(error);
-        alert("Erro ao deletar cliente");
-    }
+    await fetch(`/clientes/${id}`,{
+
+        method:"DELETE"
+
+    });
+
+    carregarClientes();
+
 }
 
-// iniciar
-listar();
+
+
+function limparCampos(){
+
+    document.getElementById("nome").value="";
+    document.getElementById("email").value="";
+    document.getElementById("telefone").value="";
+    document.getElementById("empresa").value="";
+    document.getElementById("horario").value="";
+    document.getElementById("senha").value="";
+
+}
+
+
+carregarClientes();

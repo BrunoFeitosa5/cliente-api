@@ -1,92 +1,154 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Clientes</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-     
-    <!-- CSS EXTERNO CORRETO -->
+
     <link rel="stylesheet" href="style.css">
-    
 </head>
 
 <body class="container mt-4">
 
     <!-- NAVBAR -->
-    <nav class="navbar navbar-dark px-3" style="background-color:#111; border-bottom:1px solid #222;">
-        <span style="color:#00ff88; font-weight:bold; font-size:18px;">
+    <nav class="navbar navbar-dark px-3"
+        style="background-color:#111;border-bottom:1px solid #222;border-radius:10px;">
+
+        <span style="color:#00ff88;font-weight:bold;font-size:18px;">
             ♻️ Time de Apoio Renov Smart
         </span>
 
-        <span style="color:#aaa; font-size:12px;">
+        <span style="color:#aaa;font-size:12px;">
             Painel de Colaboradores
         </span>
+
     </nav>
+
 
     <!-- DASHBOARD -->
     <div class="row mt-4 text-center">
 
         <div class="col-md-4">
+
             <div class="card p-3">
+
                 <h6>Total de Colaboradores</h6>
-                <h2 id="totalClientes" style="color:#00ff88;">0</h2>
+
+                <h2 id="totalClientes"
+                    style="color:#00ff88;">
+                    0
+                </h2>
+
             </div>
+
         </div>
 
+
         <div class="col-md-4">
+
             <div class="card p-3">
+
                 <h6>Status Sistema</h6>
-                <h2 style="color:#00ff88;">Online</h2>
+
+                <h2 style="color:#00ff88;">
+                    Online
+                </h2>
+
             </div>
+
         </div>
 
+
         <div class="col-md-4">
+
             <div class="card p-3">
+
                 <h6>Última Atualização</h6>
-                <h2 style="color:#00ff88;">Agora</h2>
+
+                <h2 style="color:#00ff88;">
+                    Agora
+                </h2>
+
             </div>
+
         </div>
 
     </div>
+
 
     <!-- FORMULÁRIO -->
-    <div class="card p-3 mt-3">
+
+    <div class="card p-3 mt-4">
+
         <h5>Adicionar Colaborador</h5>
 
-        <input id="nome" class="form-control mt-2" placeholder="Nome do colaborador">
-        <input id="email" class="form-control mt-2" placeholder="Email">
-        <input id="telefone" class="form-control mt-2" placeholder="Telefone">
-        <input id="empresa" class="form-control mt-2" placeholder="Empresa">
-        <input id="horario" class="form-control mt-2" placeholder="Horário">
-        <input id="senha" type="password" class="form-control mt-2" placeholder="Senha">
+        <input id="nome"
+               class="form-control mt-2"
+               placeholder="Nome">
 
-        <div class="d-flex justify-content-center mt-3">
-            <button class="btn btn-success btn-sm px-4" onclick="criarCliente()">
-                Adicionar
-            </button>
-        </div>
+        <input id="email"
+               class="form-control mt-2"
+               placeholder="Email">
+
+        <input id="telefone"
+               class="form-control mt-2"
+               placeholder="Telefone">
+
+        <input id="empresa"
+               class="form-control mt-2"
+               placeholder="Empresa">
+
+        <input id="horario"
+               class="form-control mt-2"
+               placeholder="Horário">
+
+        <input id="senha"
+               type="password"
+               class="form-control mt-2"
+               placeholder="Senha">
+
+        <button
+            class="btn btn-success mt-3"
+            onclick="criarCliente()">
+
+            Adicionar
+
+        </button>
+
     </div>
 
+
     <!-- TABELA -->
+
     <table class="table table-dark table-striped mt-4">
+
         <thead>
+
             <tr>
+
                 <th>ID</th>
-                <th>Nome do Colaborador</th>
+                <th>Nome</th>
                 <th>Email</th>
                 <th>Telefone</th>
                 <th>Empresa</th>
                 <th>Horário</th>
                 <th>Ações</th>
+
             </tr>
+
         </thead>
 
-        <tbody id="tabela"></tbody>
+        <tbody id="tabela">
+
+        </tbody>
+
     </table>
+
 
     <script src="script.js"></script>
 
 </body>
-
 </html>
