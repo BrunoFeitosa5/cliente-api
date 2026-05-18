@@ -1,3 +1,4 @@
+
 async function fazerLogin() {
 
     const email =
@@ -9,7 +10,6 @@ async function fazerLogin() {
     const res = await fetch("/login", {
 
         method: "POST",
-
         headers: {
             "Content-Type": "application/json"
         },
@@ -25,34 +25,22 @@ async function fazerLogin() {
 
     if (res.ok) {
 
-        localStorage.setItem(
-            "token",
-            data.access_token
-        );
+        localStorage.setItem("token", data.access_token);
 
-        // define tipo de usuário
+        // define tipo usuário
         if (email === "admin@renov.com") {
-
             localStorage.setItem("tipoUsuario", "admin");
-
-            document.getElementById("areaAdmin").style.display = "block";
-
         } else {
-
             localStorage.setItem("tipoUsuario", "usuario");
-
-            document.getElementById("areaAdmin").style.display = "none";
         }
 
-        // sempre mostra botão sair
-        document.getElementById("areaSair").style.display = "block";
+        atualizarUI();
 
         carregarClientes();
 
         alert("Login realizado");
 
     } else {
-
         alert(data.erro);
     }
 }
@@ -61,26 +49,44 @@ async function fazerLogin() {
 
 function sair() {
 
-    const tipo =
-    localStorage.getItem("tipoUsuario");
+    const tipo = localStorage.getItem("tipoUsuario");
 
-    // limpa sessão
     localStorage.removeItem("token");
     localStorage.removeItem("tipoUsuario");
 
-    // esconde telas
-    document.getElementById("areaAdmin").style.display = "none";
-    document.getElementById("areaSair").style.display = "none";
+    atualizarUI();
 
     if (tipo === "admin") {
-
-        // admin volta pro painel normal
         location.reload();
-
     } else {
-
-        // usuário normal vai pro Google
         window.location.href = "https://www.google.com/search";
+    }
+}
+
+
+
+function atualizarUI() {
+
+    const token = localStorage.getItem("token");
+    const tipo = localStorage.getItem("tipoUsuario");
+
+    const areaSair = document.getElementById("areaSair");
+    const areaAdmin = document.getElementById("areaAdmin");
+
+    if (!areaSair || !areaAdmin) return;
+
+    // botão sair SEMPRE que logado
+    if (token) {
+        areaSair.style.display = "block";
+    } else {
+        areaSair.style.display = "none";
+    }
+
+    // admin vê painel
+    if (tipo === "admin") {
+        areaAdmin.style.display = "block";
+    } else {
+        areaAdmin.style.display = "none";
     }
 }
 
@@ -88,30 +94,19 @@ function sair() {
 
 async function carregarClientes() {
 
-    const res =
-    await fetch("/clientes");
+    const res = await fetch("/clientes");
+    const data = await res.json();
 
-    const data =
-    await res.json();
+    const clientes = data.clientes;
 
-    const clientes =
-    data.clientes;
-
-    const tabela =
-    document.getElementById("tabela");
-
-    const total =
-    document.getElementById("totalClientes");
+    const tabela = document.getElementById("tabela");
+    const total = document.getElementById("totalClientes");
 
     tabela.innerHTML = "";
-
     total.innerText = clientes.length;
 
-    const token =
-    localStorage.getItem("token");
-
-    const tipo =
-    localStorage.getItem("tipoUsuario");
+    const token = localStorage.getItem("token");
+    const tipo = localStorage.getItem("tipoUsuario");
 
     clientes.forEach(c => {
 
@@ -120,22 +115,15 @@ async function carregarClientes() {
         if (token && tipo === "admin") {
 
             botoes = `
+                <button class="btn btn-warning btn-sm"
+                onclick="editarCliente(${c.id})">Editar</button>
 
-            <button class="btn btn-warning btn-sm"
-            onclick="editarCliente(${c.id})">
-            Editar
-            </button>
-
-            <button class="btn btn-danger btn-sm"
-            onclick="deletarCliente(${c.id})">
-            Excluir
-            </button>
-
+                <button class="btn btn-danger btn-sm"
+                onclick="deletarCliente(${c.id})">Excluir</button>
             `;
         }
 
         tabela.innerHTML += `
-
         <tr>
 
         <td>${c.id}</td>
@@ -163,19 +151,15 @@ async function carregarClientes() {
         <td>${botoes}</td>
 
         </tr>
-
         `;
-
     });
-
 }
 
 
 
 async function criarCliente() {
 
-    const token =
-    localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
     const cliente = {
 
@@ -191,7 +175,6 @@ async function criarCliente() {
     await fetch("/clientes", {
 
         method: "POST",
-
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`
@@ -208,8 +191,7 @@ async function criarCliente() {
 
 async function editarCliente(id) {
 
-    const token =
-    localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
     const cliente = {
 
@@ -224,7 +206,6 @@ async function editarCliente(id) {
     await fetch(`/clientes/${id}`, {
 
         method: "PUT",
-
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`
@@ -243,13 +224,11 @@ async function editarCliente(id) {
 
 async function deletarCliente(id) {
 
-    const token =
-    localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
     await fetch(`/clientes/${id}`, {
 
         method: "DELETE",
-
         headers: {
             "Authorization": `Bearer ${token}`
         }
@@ -261,15 +240,8 @@ async function deletarCliente(id) {
 
 
 
-// ao abrir página
-if (localStorage.getItem("token")) {
-
-    document.getElementById("areaSair").style.display = "block";
-
-    if (localStorage.getItem("tipoUsuario") === "admin") {
-
-        document.getElementById("areaAdmin").style.display = "block";
-    }
-}
-
-carregarClientes();
+// 🔥 INICIALIZAÇÃO CORRETA (ESSENCIAL)
+window.onload = function () {
+    atualizarUI();
+    carregarClientes();
+};
