@@ -6,15 +6,15 @@ async function fazerLogin() {
     const senha =
     document.getElementById("loginSenha").value;
 
-    const res = await fetch("/login",{
+    const res = await fetch("/login", {
 
-        method:"POST",
+        method: "POST",
 
-        headers:{
-            "Content-Type":"application/json"
+        headers: {
+            "Content-Type": "application/json"
         },
 
-        body:JSON.stringify({
+        body: JSON.stringify({
             email,
             senha
         })
@@ -23,7 +23,7 @@ async function fazerLogin() {
 
     const data = await res.json();
 
-    if(res.ok){
+    if (res.ok) {
 
         localStorage.setItem(
             "token",
@@ -31,109 +31,111 @@ async function fazerLogin() {
         );
 
         // define tipo de usuário
-        if(email === "admin@renov.com"){
+        if (email === "admin@renov.com") {
 
-            localStorage.setItem(
-                "tipoUsuario",
-                "admin"
-            );
+            localStorage.setItem("tipoUsuario", "admin");
 
-            document.getElementById(
-                "areaAdmin"
-            ).style.display = "block";
+            document.getElementById("areaAdmin").style.display = "block";
 
-        }else{
+        } else {
 
-            localStorage.setItem(
-                "tipoUsuario",
-                "usuario"
-            );
+            localStorage.setItem("tipoUsuario", "usuario");
 
-            document.getElementById(
-                "areaAdmin"
-            ).style.display = "none";
-
+            document.getElementById("areaAdmin").style.display = "none";
         }
 
-        document.getElementById(
-            "areaSair"
-        ).style.display = "block";
+        // sempre mostra botão sair
+        document.getElementById("areaSair").style.display = "block";
 
         carregarClientes();
 
         alert("Login realizado");
 
-    }else{
+    } else {
 
         alert(data.erro);
-
     }
-
 }
 
 
 
-function sair(){
+function sair() {
 
     const tipo =
     localStorage.getItem("tipoUsuario");
 
+    // limpa sessão
     localStorage.removeItem("token");
     localStorage.removeItem("tipoUsuario");
 
-    // sempre esconde tudo
+    // esconde telas
     document.getElementById("areaAdmin").style.display = "none";
     document.getElementById("areaSair").style.display = "none";
 
-    if(tipo === "admin"){
+    if (tipo === "admin") {
 
-        // admin volta para estado normal do painel
+        // admin volta pro painel normal
         location.reload();
 
-    }else{
+    } else {
 
-        // usuário comum vai para Google
-        window.location.href = "https://www.google.com";
-
+        // usuário normal vai pro Google
+        window.location.href = "https://www.google.com/search";
     }
-
 }
 
 
 
-async function carregarClientes(){
+async function carregarClientes() {
 
-    const res = await fetch("/clientes");
-    const data = await res.json();
+    const res =
+    await fetch("/clientes");
 
-    const clientes = data.clientes;
+    const data =
+    await res.json();
 
-    const tabela = document.getElementById("tabela");
-    const total = document.getElementById("totalClientes");
+    const clientes =
+    data.clientes;
+
+    const tabela =
+    document.getElementById("tabela");
+
+    const total =
+    document.getElementById("totalClientes");
 
     tabela.innerHTML = "";
+
     total.innerText = clientes.length;
 
-    const token = localStorage.getItem("token");
-    const tipo = localStorage.getItem("tipoUsuario");
+    const token =
+    localStorage.getItem("token");
+
+    const tipo =
+    localStorage.getItem("tipoUsuario");
 
     clientes.forEach(c => {
 
         let botoes = "";
 
-        if(token && tipo === "admin"){
+        if (token && tipo === "admin") {
 
             botoes = `
+
             <button class="btn btn-warning btn-sm"
-            onclick="editarCliente(${c.id})">Editar</button>
+            onclick="editarCliente(${c.id})">
+            Editar
+            </button>
 
             <button class="btn btn-danger btn-sm"
-            onclick="deletarCliente(${c.id})">Excluir</button>
-            `;
+            onclick="deletarCliente(${c.id})">
+            Excluir
+            </button>
 
+            `;
         }
 
         tabela.innerHTML += `
+
         <tr>
 
         <td>${c.id}</td>
@@ -161,6 +163,7 @@ async function carregarClientes(){
         <td>${botoes}</td>
 
         </tr>
+
         `;
 
     });
@@ -169,9 +172,10 @@ async function carregarClientes(){
 
 
 
-async function criarCliente(){
+async function criarCliente() {
 
-    const token = localStorage.getItem("token");
+    const token =
+    localStorage.getItem("token");
 
     const cliente = {
 
@@ -184,28 +188,28 @@ async function criarCliente(){
 
     };
 
-    await fetch("/clientes",{
+    await fetch("/clientes", {
 
-        method:"POST",
+        method: "POST",
 
-        headers:{
-            "Content-Type":"application/json",
-            "Authorization":`Bearer ${token}`
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
         },
 
-        body:JSON.stringify(cliente)
+        body: JSON.stringify(cliente)
 
     });
 
     carregarClientes();
-
 }
 
 
 
-async function editarCliente(id){
+async function editarCliente(id) {
 
-    const token = localStorage.getItem("token");
+    const token =
+    localStorage.getItem("token");
 
     const cliente = {
 
@@ -217,56 +221,55 @@ async function editarCliente(id){
 
     };
 
-    await fetch(`/clientes/${id}`,{
+    await fetch(`/clientes/${id}`, {
 
-        method:"PUT",
+        method: "PUT",
 
-        headers:{
-            "Content-Type":"application/json",
-            "Authorization":`Bearer ${token}`
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
         },
 
-        body:JSON.stringify(cliente)
+        body: JSON.stringify(cliente)
 
     });
 
     alert("Atualizado");
 
     carregarClientes();
-
 }
 
 
 
-async function deletarCliente(id){
+async function deletarCliente(id) {
 
-    const token = localStorage.getItem("token");
+    const token =
+    localStorage.getItem("token");
 
-    await fetch(`/clientes/${id}`,{
+    await fetch(`/clientes/${id}`, {
 
-        method:"DELETE",
+        method: "DELETE",
 
-        headers:{
-            "Authorization":`Bearer ${token}`
+        headers: {
+            "Authorization": `Bearer ${token}`
         }
 
     });
 
     carregarClientes();
-
 }
 
 
 
-// AO ABRIR A PÁGINA
-if(localStorage.getItem("token")){
+// ao abrir página
+if (localStorage.getItem("token")) {
 
     document.getElementById("areaSair").style.display = "block";
 
-    if(localStorage.getItem("tipoUsuario") === "admin"){
+    if (localStorage.getItem("tipoUsuario") === "admin") {
+
         document.getElementById("areaAdmin").style.display = "block";
     }
-
 }
 
 carregarClientes();
