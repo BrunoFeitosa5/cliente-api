@@ -2,61 +2,83 @@
 <html lang="pt-br">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
     <title>Painel Apoio Renov</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet">
 
-    <link rel="stylesheet" href="style.css">
+    <link
+    rel="stylesheet"
+    href="style.css">
+
 </head>
 
 <body class="container mt-4">
 
     <!-- NAVBAR -->
-    <nav class="navbar navbar-dark px-3"
-        style="background-color:#111;border-bottom:1px solid #222;border-radius:10px;">
+    <nav
+    class="navbar navbar-dark px-3"
+    style="
+    background-color:#111;
+    border-bottom:1px solid #222;
+    border-radius:10px;">
 
-        <span style="color:#00ff88;font-weight:bold;font-size:18px;">
-            ♻️ Time de Apoio Renov Smart
+        <span
+        style="
+        color:#00ff88;
+        font-weight:bold;
+        font-size:18px;">
+
+        ♻️ Time de Apoio Renov Smart
+
         </span>
 
-        <span style="color:#aaa;font-size:12px;">
-            Painel de Colaboradores
+        <span
+        style="
+        color:#aaa;
+        font-size:12px;">
+
+        Painel de Colaboradores
+
         </span>
 
     </nav>
 
 
     <!-- LOGIN -->
-    <div class="card p-3 mt-3">
+    <div
+    class="card p-3 mt-3">
 
-        <h5>Área Administrativa</h5>
+        <h5>
 
-        <button
-            class="btn btn-danger btn-sm mt-2"
-            onclick="logout()">
+            Área Administrativa
 
-            Sair
-
-        </button>
+        </h5>
 
         <input
-            id="loginEmail"
-            class="form-control mt-2"
-            placeholder="Email">
+        id="loginEmail"
+        class="form-control mt-2"
+        placeholder="Email">
 
         <input
-            id="loginSenha"
-            type="password"
-            class="form-control mt-2"
-            placeholder="Senha">
+        id="loginSenha"
+        type="password"
+        class="form-control mt-2"
+        placeholder="Senha">
 
         <button
-            class="btn btn-primary mt-3"
-            onclick="fazerLogin()">
+        class="btn btn-primary mt-3"
+        onclick="fazerLogin()">
 
-            Entrar
+        Entrar
 
         </button>
 
@@ -64,70 +86,143 @@
 
 
     <!-- DASHBOARD -->
-    <div class="row mt-4 text-center">
+    <div
+    class="row mt-4 text-center">
 
         <div class="col-md-4">
+
             <div class="card p-3">
-                <h6>Total de Colaboradores</h6>
-                <h2 id="totalClientes" style="color:#00ff88;">0</h2>
+
+                <h6>
+                    Total de Colaboradores
+                </h6>
+
+                <h2
+                id="totalClientes"
+                style="color:#00ff88;">
+
+                0
+
+                </h2>
+
             </div>
+
         </div>
 
-        <div class="col-md-4">
-            <div class="card p-3">
-                <h6>Status Sistema</h6>
-                <h2 style="color:#00ff88;">Online</h2>
-            </div>
-        </div>
 
         <div class="col-md-4">
+
             <div class="card p-3">
-                <h6>Última Atualização</h6>
-                <h2 style="color:#00ff88;">Agora</h2>
+
+                <h6>
+                    Status Sistema
+                </h6>
+
+                <h2
+                style="color:#00ff88;">
+
+                Online
+
+                </h2>
+
             </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <div class="card p-3">
+
+                <h6>
+                    Última Atualização
+                </h6>
+
+                <h2
+                style="color:#00ff88;">
+
+                Agora
+
+                </h2>
+
+            </div>
+
         </div>
 
     </div>
 
 
-    <!-- FORMULÁRIO ADMIN -->
-    <div class="card p-3 mt-4"
-         id="areaAdmin"
-         style="display:none;">
 
-        <h5>Adicionar Colaborador</h5>
+    <!-- ÁREA ADMIN -->
+    <div
+    class="card p-3 mt-4"
+    id="areaAdmin"
+    style="display:none;">
 
-        <input id="nome" class="form-control mt-2" placeholder="Nome">
+        <h5>
 
-        <input id="email" class="form-control mt-2" placeholder="Email">
+        Adicionar Colaborador
 
-        <input id="telefone" class="form-control mt-2" placeholder="Telefone">
+        </h5>
 
-        <input id="empresa" class="form-control mt-2" placeholder="Empresa">
 
-        <input id="horario" class="form-control mt-2" placeholder="Horário">
+        <input
+        id="nome"
+        class="form-control mt-2"
+        placeholder="Nome">
 
-        <input id="senha"
-               type="password"
-               class="form-control mt-2"
-               placeholder="Senha">
+
+        <input
+        id="email"
+        class="form-control mt-2"
+        placeholder="Email">
+
+
+        <input
+        id="telefone"
+        class="form-control mt-2"
+        placeholder="Telefone">
+
+
+        <input
+        id="empresa"
+        class="form-control mt-2"
+        placeholder="Empresa">
+
+
+        <input
+        id="horario"
+        class="form-control mt-2"
+        placeholder="Horário">
+
+
+        <input
+        id="senha"
+        type="password"
+        class="form-control mt-2"
+        placeholder="Senha">
+
 
         <button
-            class="btn btn-success mt-3"
-            onclick="criarCliente()">
+        class="btn btn-success mt-3"
+        onclick="criarCliente()">
 
-            Adicionar
+        Adicionar
 
         </button>
 
     </div>
 
 
+
     <!-- TABELA -->
-    <table class="table table-dark table-striped mt-4">
+    <table
+    class="table table-dark table-striped mt-4">
 
         <thead>
+
             <tr>
+
                 <th>ID</th>
                 <th>Nome</th>
                 <th>Email</th>
@@ -135,14 +230,36 @@
                 <th>Empresa</th>
                 <th>Horário</th>
                 <th>Ações</th>
+
             </tr>
+
         </thead>
 
         <tbody id="tabela"></tbody>
 
     </table>
 
+
+
+    <!-- BOTÃO SAIR -->
+    <div
+    id="areaSair"
+    class="text-center mt-4 mb-5"
+    style="display:none;">
+
+        <button
+        class="btn btn-danger"
+        onclick="sair()">
+
+        Sair do Painel ADM
+
+        </button>
+
+    </div>
+
+
     <script src="script.js"></script>
 
 </body>
+
 </html>

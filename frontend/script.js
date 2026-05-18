@@ -1,13 +1,17 @@
 async function fazerLogin() {
 
     const email =
-    document.getElementById("loginEmail").value;
+    document.getElementById(
+        "loginEmail"
+    ).value;
 
     const senha =
-    document.getElementById("loginSenha").value;
+    document.getElementById(
+        "loginSenha"
+    ).value;
 
 
-    const res = await fetch("/login", {
+    const res = await fetch("/login",{
 
         method:"POST",
 
@@ -22,28 +26,62 @@ async function fazerLogin() {
 
     });
 
-    const data = await res.json();
+    const data =
+    await res.json();
 
 
     if(res.ok){
 
-        // CORRIGIDO AQUI
         localStorage.setItem(
             "token",
             data.access_token
         );
 
+
+        // DEFINE TIPO USUÁRIO
+        if(
+            email==="admin@renov.com"
+        ){
+
+            localStorage.setItem(
+                "tipoUsuario",
+                "admin"
+            );
+
+            document.getElementById(
+                "areaAdmin"
+            ).style.display="block";
+
+        }else{
+
+            localStorage.setItem(
+                "tipoUsuario",
+                "usuario"
+            );
+
+            document.getElementById(
+                "areaAdmin"
+            ).style.display="none";
+
+        }
+
+
         document.getElementById(
-            "areaAdmin"
+            "areaSair"
         ).style.display="block";
+
 
         carregarClientes();
 
-        alert("Login realizado");
+        alert(
+            "Login realizado"
+        );
 
     }else{
 
-        alert(data.erro);
+        alert(
+            data.erro
+        );
 
     }
 
@@ -53,11 +91,31 @@ async function fazerLogin() {
 
 function sair(){
 
+    const tipo =
+    localStorage.getItem(
+        "tipoUsuario"
+    );
+
+
     localStorage.removeItem(
         "token"
     );
 
-    location.reload();
+    localStorage.removeItem(
+        "tipoUsuario"
+    );
+
+
+    if(tipo==="admin"){
+
+        location.reload();
+
+    }else{
+
+        window.location.href=
+        "https://www.google.com";
+
+    }
 
 }
 
@@ -74,15 +132,18 @@ async function carregarClientes(){
     const clientes =
     data.clientes;
 
+
     const tabela =
     document.getElementById(
         "tabela"
     );
 
+
     const total =
     document.getElementById(
         "totalClientes"
     );
+
 
     tabela.innerHTML="";
 
@@ -90,9 +151,15 @@ async function carregarClientes(){
     clientes.length;
 
 
-    const token =
+    const token=
     localStorage.getItem(
         "token"
+    );
+
+
+    const tipo=
+    localStorage.getItem(
+        "tipoUsuario"
     );
 
 
@@ -100,7 +167,11 @@ async function carregarClientes(){
 
         let botoes="";
 
-        if(token){
+
+        if(
+            token &&
+            tipo==="admin"
+        ){
 
             botoes=`
 
@@ -131,29 +202,54 @@ async function carregarClientes(){
 
         <td>${c.id}</td>
 
-        <td contenteditable="${token ? true : false}"
+        <td
+        contenteditable="${
+        tipo==="admin"
+        }"
         id="nome-${c.id}">
+
         ${c.nome}
+
         </td>
 
-        <td contenteditable="${token ? true : false}"
+        <td
+        contenteditable="${
+        tipo==="admin"
+        }"
         id="email-${c.id}">
+
         ${c.email}
+
         </td>
 
-        <td contenteditable="${token ? true : false}"
+        <td
+        contenteditable="${
+        tipo==="admin"
+        }"
         id="telefone-${c.id}">
+
         ${c.telefone}
+
         </td>
 
-        <td contenteditable="${token ? true : false}"
+        <td
+        contenteditable="${
+        tipo==="admin"
+        }"
         id="empresa-${c.id}">
+
         ${c.empresa}
+
         </td>
 
-        <td contenteditable="${token ? true : false}"
+        <td
+        contenteditable="${
+        tipo==="admin"
+        }"
         id="horario-${c.id}">
+
         ${c.horario}
+
         </td>
 
         <td>
@@ -174,7 +270,7 @@ async function carregarClientes(){
 
 async function criarCliente(){
 
-    const token =
+    const token=
     localStorage.getItem(
         "token"
     );
@@ -183,22 +279,34 @@ async function criarCliente(){
     const cliente={
 
         nome:
-        document.getElementById("nome").value,
+        document.getElementById(
+        "nome"
+        ).value,
 
         email:
-        document.getElementById("email").value,
+        document.getElementById(
+        "email"
+        ).value,
 
         telefone:
-        document.getElementById("telefone").value,
+        document.getElementById(
+        "telefone"
+        ).value,
 
         empresa:
-        document.getElementById("empresa").value,
+        document.getElementById(
+        "empresa"
+        ).value,
 
         horario:
-        document.getElementById("horario").value,
+        document.getElementById(
+        "horario"
+        ).value,
 
         senha:
-        document.getElementById("senha").value
+        document.getElementById(
+        "senha"
+        ).value
 
     };
 
@@ -209,16 +317,21 @@ async function criarCliente(){
 
         headers:{
 
-            "Content-Type":"application/json",
+            "Content-Type":
+            "application/json",
 
             "Authorization":
             `Bearer ${token}`
 
         },
 
-        body:JSON.stringify(cliente)
+        body:
+        JSON.stringify(
+        cliente
+        )
 
     });
+
 
     carregarClientes();
 
@@ -228,7 +341,7 @@ async function criarCliente(){
 
 async function editarCliente(id){
 
-    const token =
+    const token=
     localStorage.getItem(
         "token"
     );
@@ -264,20 +377,25 @@ async function editarCliente(id){
     };
 
 
-    await fetch(`/clientes/${id}`,{
+    await fetch(
+    `/clientes/${id}`,{
 
         method:"PUT",
 
         headers:{
 
-            "Content-Type":"application/json",
+            "Content-Type":
+            "application/json",
 
             "Authorization":
             `Bearer ${token}`
 
         },
 
-        body:JSON.stringify(cliente)
+        body:
+        JSON.stringify(
+        cliente
+        )
 
     });
 
@@ -294,13 +412,14 @@ async function editarCliente(id){
 
 async function deletarCliente(id){
 
-    const token =
+    const token=
     localStorage.getItem(
         "token"
     );
 
 
-    await fetch(`/clientes/${id}`,{
+    await fetch(
+    `/clientes/${id}`,{
 
         method:"DELETE",
 
@@ -313,19 +432,35 @@ async function deletarCliente(id){
 
     });
 
+
     carregarClientes();
 
 }
 
 
 
+// VERIFICA LOGIN AO ABRIR PÁGINA
 if(localStorage.getItem("token")){
 
     document.getElementById(
-    "areaAdmin"
+    "areaSair"
     ).style.display="block";
 
-}
 
+    if(
+
+        localStorage.getItem(
+        "tipoUsuario"
+        )==="admin"
+
+    ){
+
+        document.getElementById(
+        "areaAdmin"
+        ).style.display="block";
+
+    }
+
+}
 
 carregarClientes();
