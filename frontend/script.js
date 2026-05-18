@@ -14,50 +14,47 @@ async function fazerLogin() {
     if (res.ok) {
 
         localStorage.setItem("token", data.access_token);
+        localStorage.setItem("tipoUsuario", "admin");
 
-        // 🔥 DEFINE TIPO DE USUÁRIO
-        if (email.includes("admin")) {
-            localStorage.setItem("tipoUsuario", "admin");
-        } else {
-            localStorage.setItem("tipoUsuario", "user");
-        }
-
-        document.getElementById("loginBox").style.display = "none";
         document.getElementById("areaAdmin").style.display = "block";
 
         carregarClientes();
 
-        alert("Login realizado");
+        alert("Login realizado com sucesso");
 
     } else {
         alert(data.erro);
     }
 }
 
-
 function sair() {
 
     const tipo = localStorage.getItem("tipoUsuario");
 
+    // limpa tudo
     localStorage.removeItem("token");
     localStorage.removeItem("tipoUsuario");
 
+    // limpa inputs login
+    document.getElementById("loginEmail").value = "";
+    document.getElementById("loginSenha").value = "";
+
+    // esconde área admin
+    document.getElementById("areaAdmin").style.display = "none";
+
+    // recarrega lista SEM permissões
+    carregarClientes();
+
+    // comportamento diferente por tipo
     if (tipo === "admin") {
 
-        // volta para tela de login
-        document.getElementById("loginBox").style.display = "block";
-        document.getElementById("areaAdmin").style.display = "none";
-
-        alert("Saiu do modo admin");
+        alert("Você saiu do modo administrador");
 
     } else {
 
-        // usuário normal vai pro google
         window.location.href = "https://www.google.com/search?q=";
-
     }
 }
-
 
 async function carregarClientes() {
 
@@ -86,19 +83,18 @@ async function carregarClientes() {
         }
 
         tabela.innerHTML += `
-        <tr>
-            <td>${c.id}</td>
-            <td>${c.nome}</td>
-            <td>${c.email}</td>
-            <td>${c.telefone}</td>
-            <td>${c.empresa}</td>
-            <td>${c.horario}</td>
-            <td>${botoes}</td>
-        </tr>
+            <tr>
+                <td>${c.id}</td>
+                <td>${c.nome}</td>
+                <td>${c.email}</td>
+                <td>${c.telefone}</td>
+                <td>${c.empresa}</td>
+                <td>${c.horario}</td>
+                <td>${botoes}</td>
+            </tr>
         `;
     });
 }
-
 
 async function criarCliente() {
 
@@ -125,17 +121,16 @@ async function criarCliente() {
     carregarClientes();
 }
 
-
 async function editarCliente(id) {
 
     const token = localStorage.getItem("token");
 
     const cliente = {
-        nome: document.getElementById(`nome-${id}`)?.innerText,
-        email: document.getElementById(`email-${id}`)?.innerText,
-        telefone: document.getElementById(`telefone-${id}`)?.innerText,
-        empresa: document.getElementById(`empresa-${id}`)?.innerText,
-        horario: document.getElementById(`horario-${id}`)?.innerText
+        nome: document.getElementById(`nome-${id}`).innerText,
+        email: document.getElementById(`email-${id}`).innerText,
+        telefone: document.getElementById(`telefone-${id}`).innerText,
+        empresa: document.getElementById(`empresa-${id}`).innerText,
+        horario: document.getElementById(`horario-${id}`).innerText
     };
 
     await fetch(`/clientes/${id}`, {
@@ -149,7 +144,6 @@ async function editarCliente(id) {
 
     carregarClientes();
 }
-
 
 async function deletarCliente(id) {
 
@@ -165,11 +159,5 @@ async function deletarCliente(id) {
     carregarClientes();
 }
 
-
-// AUTO LOGIN
-if (localStorage.getItem("token")) {
-    document.getElementById("loginBox").style.display = "none";
-    document.getElementById("areaAdmin").style.display = "block";
-}
-
+// inicialização
 carregarClientes();

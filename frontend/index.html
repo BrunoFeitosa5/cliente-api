@@ -26,21 +26,22 @@
 
     </nav>
 
-    <!-- LOGIN -->
-    <div class="card p-3 mt-3" id="loginBox">
+  <!-- LOGIN -->
+<div class="card p-3 mt-3 text-center" id="loginBox">
 
-        <h5>Área Administrativa</h5>
+    <h5>Área Administrativa</h5>
 
-        <input id="loginEmail" class="form-control mt-2" placeholder="Email">
+    <input id="loginEmail" class="form-control mt-2" placeholder="Email">
+    <input id="loginSenha" type="password" class="form-control mt-2" placeholder="Senha">
 
-        <input id="loginSenha" type="password" class="form-control mt-2" placeholder="Senha">
-
-        <button class="btn btn-success mt-3 w-100" onclick="fazerLogin()">
+    <!-- BOTÃO CENTRALIZADO E MENOR -->
+    <div class="d-flex justify-content-center mt-3">
+        <button class="btn btn-success btn-sm px-4" onclick="fazerLogin()">
             Entrar
         </button>
-
     </div>
 
+</div>
     <!-- DASHBOARD -->
     <div class="row mt-4 text-center">
 
@@ -107,7 +108,6 @@
     <!-- BOTÃO SAIR (FIXO NO FLUXO DA PÁGINA) -->
 <!-- BOTÃO SAIR (FIXO NO FLUXO DA PÁGINA) -->
 <div class="text-center mt-5 mb-4">
-    
     <button class="btn btn-danger px-5" onclick="sair()">
         Sair
     </button>
