@@ -1,17 +1,21 @@
 async function fazerLogin() {
 
-    const email = document.getElementById("loginEmail").value;
-    const senha = document.getElementById("loginSenha").value;
+    const email =
+    document.getElementById("loginEmail").value;
+
+    const senha =
+    document.getElementById("loginSenha").value;
+
 
     const res = await fetch("/login", {
 
-        method: "POST",
+        method:"POST",
 
-        headers: {
+        headers:{
             "Content-Type":"application/json"
         },
 
-        body: JSON.stringify({
+        body:JSON.stringify({
             email,
             senha
         })
@@ -20,11 +24,13 @@ async function fazerLogin() {
 
     const data = await res.json();
 
+
     if(res.ok){
 
+        // CORRIGIDO AQUI
         localStorage.setItem(
             "token",
-            data.token
+            data.access_token
         );
 
         document.getElementById(
@@ -44,27 +50,50 @@ async function fazerLogin() {
 }
 
 
+
+function sair(){
+
+    localStorage.removeItem(
+        "token"
+    );
+
+    location.reload();
+
+}
+
+
+
 async function carregarClientes(){
 
-    const res = await fetch("/clientes");
+    const res =
+    await fetch("/clientes");
 
-    const data = await res.json();
+    const data =
+    await res.json();
 
-    const clientes = data.clientes;
+    const clientes =
+    data.clientes;
 
     const tabela =
-    document.getElementById("tabela");
+    document.getElementById(
+        "tabela"
+    );
 
     const total =
-    document.getElementById("totalClientes");
+    document.getElementById(
+        "totalClientes"
+    );
 
     tabela.innerHTML="";
 
     total.innerText=
     clientes.length;
 
+
     const token =
-    localStorage.getItem("token");
+    localStorage.getItem(
+        "token"
+    );
 
 
     clientes.forEach(c=>{
@@ -94,6 +123,7 @@ async function carregarClientes(){
             `;
 
         }
+
 
         tabela.innerHTML +=`
 
@@ -141,10 +171,14 @@ async function carregarClientes(){
 }
 
 
+
 async function criarCliente(){
 
     const token =
-    localStorage.getItem("token");
+    localStorage.getItem(
+        "token"
+    );
+
 
     const cliente={
 
@@ -167,6 +201,7 @@ async function criarCliente(){
         document.getElementById("senha").value
 
     };
+
 
     await fetch("/clientes",{
 
@@ -194,7 +229,9 @@ async function criarCliente(){
 async function editarCliente(id){
 
     const token =
-    localStorage.getItem("token");
+    localStorage.getItem(
+        "token"
+    );
 
 
     const cliente={
@@ -244,7 +281,10 @@ async function editarCliente(id){
 
     });
 
-    alert("Atualizado");
+
+    alert(
+        "Atualizado"
+    );
 
     carregarClientes();
 
@@ -255,7 +295,10 @@ async function editarCliente(id){
 async function deletarCliente(id){
 
     const token =
-    localStorage.getItem("token");
+    localStorage.getItem(
+        "token"
+    );
+
 
     await fetch(`/clientes/${id}`,{
 
