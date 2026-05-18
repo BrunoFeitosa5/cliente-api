@@ -3,34 +3,48 @@ body {
     color: #ffffff;
 }
 
-/* TITULOS CORRETOS */
-h1, h2, h3, h4, h5 {
-    color: #ffffff;
-    font-weight: 600;
+/* =========================
+   NAVBAR
+   ========================= */
+.nav-custom {
+    background-color: #111;
+    border-bottom: 1px solid #222;
+    border-radius: 10px;
 }
 
-/* CARDS */
+.logo {
+    color: #00ff88;
+    font-weight: bold;
+}
+
+.sub {
+    color: #aaa;
+    font-size: 12px;
+}
+
+/* =========================
+   CARDS
+   ========================= */
 .card {
     background-color: #1a1a1a;
     border: 1px solid #2a2a2a;
-}
-
-.card h6 {
-    color: #dbd6d6;
-    font-weight: 600;
-    opacity: 1;
-}
-
-.card h2 {
-    color: #ffffff;
-    font-weight: 700;
-}
-
-.card {
     text-align: center;
 }
 
-/* INPUTS */
+/* =========================
+   TEXTOS
+   ========================= */
+.titulo-branco {
+    color: #ffffff;
+}
+
+.verde {
+    color: #00ff88;
+}
+
+/* =========================
+   INPUTS
+   ========================= */
 .form-control {
     background-color: #111;
     color: #ffffff;
@@ -48,48 +62,76 @@ h1, h2, h3, h4, h5 {
     box-shadow: none;
 }
 
-/* TABELA */
-table {
-    color: #ffffff;
-}
+/* =========================
+   BOTÃO LOGIN (PROFISSIONAL REAL)
+   ========================= */
+.btn-login {
+    background-color: #00ff88 !important;
+    color: #000 !important;
 
-thead th {
-    color: #ffffff;
     font-weight: 600;
+    font-size: 14px;
+
+    padding: 6px 14px !important;
+
+    width: 140px !important;
+    height: 34px;
+
+    display: block;
+    margin: 12px auto 0;
+
+    border: none !important;
+    border-radius: 6px;
+
+    transition: 0.2s ease;
 }
 
-tbody td {
-    color: #ffffff;
-    vertical-align: middle;
+.btn-login:hover {
+    background-color: #00e07a !important;
+    transform: scale(1.03);
 }
 
-/* BOTÕES */
+/* =========================
+   BOTÃO SAIR (PROFISSIONAL REAL)
+   ========================= */
+.btn-danger {
+    background-color: #ff3b3b !important;
+    color: #fff !important;
+
+    font-weight: 500;
+    font-size: 13px;
+
+    padding: 6px 14px !important;
+
+    width: 140px !important;
+    height: 34px;
+
+    display: block;
+    margin: 16px auto 0;
+
+    border: none !important;
+    border-radius: 6px;
+
+    transition: 0.2s ease;
+}
+
+.btn-danger:hover {
+    background-color: #ff1f1f !important;
+    transform: scale(1.03);
+}
+
+/* =========================
+   BOTÃO ADICIONAR
+   ========================= */
 .btn-success {
     background-color: #00ff88;
     border: none;
     color: black;
 }
 
-.btn-primary {
-    background-color: #00aaff;
-    border: none;
-    color: white;
-}
-
-.btn-danger {
-    background-color: #ff3b3b;
-    border: none;
-    color: white;
-}
-
-/* BOTÕES AGRUPADOS */
-.action-btns {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    align-items: center;
-}
-
-.btn-sm {
-    min-width: 80px;
+/* =========================
+   TABELA
+   ========================= */
+table {
+    color: #ffffff;
 }

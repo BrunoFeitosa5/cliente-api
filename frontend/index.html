@@ -7,150 +7,108 @@
     <title>Painel Apoio Renov</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-        body {
-            background-color: #0f0f0f;
-            color: white;
-        }
-
-        .card {
-            background-color: #111;
-            border: 1px solid #222;
-            color: white;
-        }
-
-        .navbar {
-            background-color: #111 !important;
-            border-radius: 10px;
-        }
-
-        table {
-            color: white !important;
-        }
-
-        /* 🔥 RESPONSIVO */
-        @media (max-width: 768px) {
-
-            body {
-                padding: 10px;
-            }
-
-            h5 {
-                font-size: 16px;
-            }
-
-            .card {
-                padding: 12px;
-            }
-
-            table {
-                display: block;
-                overflow-x: auto;
-                white-space: nowrap;
-            }
-
-            .row {
-                flex-direction: column;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="container mt-4">
+<body>
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-dark px-3">
+<div class="container mt-4">
 
-    <span style="color:#00ff88;font-weight:bold;">
-        ♻️ Time de Apoio Renov Smart
-    </span>
+    <!-- NAV -->
+    <nav class="navbar navbar-dark px-3 nav-custom">
+        <span class="logo">♻️ Time de Apoio Renov Smart</span>
+        <span class="sub">Painel de Colaboradores</span>
+    </nav>
 
-</nav>
+    <!-- LOGIN -->
+    <div class="card p-3 mt-3" id="loginBox">
 
-<!-- LOGIN -->
-<div class="card p-3 mt-3 text-center" id="loginBox">
+        <h5 class="titulo-branco">Área Administrativa</h5>
 
-    <h5>Área Administrativa</h5>
+        <input id="loginEmail" class="form-control mt-2" placeholder="Email">
+        <input id="loginSenha" type="password" class="form-control mt-2" placeholder="Senha">
 
-    <div class="row g-2">
+        <button class="btn btn-login mt-3 w-100" onclick="fazerLogin()">
+            Entrar
+        </button>
 
-        <div class="col-12">
-            <input id="loginEmail" class="form-control" placeholder="Email">
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="row mt-4 text-center">
+
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h6 class="verde">Total de Colaboradores</h6>
+                <h2 class="verde" id="totalClientes">0</h2>
+            </div>
         </div>
 
-        <div class="col-12">
-            <input id="loginSenha" type="password" class="form-control" placeholder="Senha">
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h6 class="verde">Status Sistema</h6>
+                <h2 class="verde">Online</h2>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h6 class="verde">Última Atualização</h6>
+                <h2 class="verde">Agora</h2>
+            </div>
         </div>
 
     </div>
 
-    <div class="d-flex justify-content-center mt-3">
-        <button class="btn btn-success btn-sm px-4 w-50" onclick="fazerLogin()">
-            Entrar
+    <!-- ADMIN -->
+    <div class="card p-3 mt-4" id="areaAdmin" style="display:none;">
+
+        <h5 class="titulo-branco">Adicionar Colaborador</h5>
+
+        <input id="nome" class="form-control mt-2" placeholder="Nome">
+        <input id="email" class="form-control mt-2" placeholder="Email">
+        <input id="telefone" class="form-control mt-2" placeholder="Telefone">
+        <input id="empresa" class="form-control mt-2" placeholder="Empresa">
+        <input id="horario" class="form-control mt-2" placeholder="Horário">
+        <input id="senha" type="password" class="form-control mt-2" placeholder="Senha">
+
+        <button class="btn btn-success mt-3" onclick="criarCliente()">
+            Adicionar
+        </button>
+
+        <!-- 🔥 BOTÃO SAIR (PARA TODOS OS USUÁRIOS) -->
+        <button class="btn btn-danger mt-4 w-100" onclick="logout()">
+            Sair
+        </button>
+
+    </div>
+
+    <!-- TABELA -->
+    <table class="table table-dark table-striped mt-4">
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Telefone</th>
+                <th>Empresa</th>
+                <th>Horário</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+
+        <tbody id="tabela"></tbody>
+
+    </table>
+
+    <!-- 🔥 BOTÃO SAIR PARA USUÁRIO NORMAL (FORA DO ADMIN) -->
+    <div class="text-center mt-3">
+        <button class="btn btn-danger w-50" onclick="logout()">
+            Sair
         </button>
     </div>
 
-</div>
-
-<!-- DASHBOARD -->
-<div class="row mt-4 text-center">
-
-    <div class="col-md-4 col-12">
-        <div class="card p-3">
-            <h6>Total de Colaboradores</h6>
-            <h2 id="totalClientes">0</h2>
-        </div>
-    </div>
-
-</div>
-
-<!-- FORM ADMIN -->
-<div class="card p-3 mt-4" id="areaAdmin" style="display:none;">
-
-    <h5>Adicionar Colaborador</h5>
-
-    <input id="nome" class="form-control mt-2" placeholder="Nome">
-    <input id="email" class="form-control mt-2" placeholder="Email">
-    <input id="telefone" class="form-control mt-2" placeholder="Telefone">
-    <input id="empresa" class="form-control mt-2" placeholder="Empresa">
-    <input id="horario" class="form-control mt-2" placeholder="Horário">
-    <input id="senha" type="password" class="form-control mt-2" placeholder="Senha">
-
-    <button class="btn btn-success mt-3" onclick="criarCliente()">
-        Adicionar
-    </button>
-
-</div>
-
-<!-- TABELA RESPONSIVA -->
-<div class="table-responsive mt-4">
-
-<table class="table table-dark table-striped">
-
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Email</th>
-            <th>Telefone</th>
-            <th>Empresa</th>
-            <th>Horário</th>
-            <th>Ações</th>
-        </tr>
-    </thead>
-
-    <tbody id="tabela"></tbody>
-
-</table>
-
-</div>
-
-<!-- BOTÃO SAIR FIXO -->
-<div class="text-center mt-5 mb-4">
-    <button class="btn btn-danger px-5" onclick="sair()">
-        Sair
-    </button>
 </div>
 
 <script src="script.js"></script>
