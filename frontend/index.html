@@ -28,82 +28,76 @@
     </nav>
 
 
+    <!-- LOGIN -->
+    <div class="card p-3 mt-3">
+
+        <h5>Área Administrativa</h5>
+
+        <input
+            id="loginEmail"
+            class="form-control mt-2"
+            placeholder="Email">
+
+        <input
+            id="loginSenha"
+            type="password"
+            class="form-control mt-2"
+            placeholder="Senha">
+
+        <button
+            class="btn btn-primary mt-3"
+            onclick="fazerLogin()">
+
+            Entrar
+
+        </button>
+
+    </div>
+
+
     <!-- DASHBOARD -->
     <div class="row mt-4 text-center">
 
         <div class="col-md-4">
-
             <div class="card p-3">
-
                 <h6>Total de Colaboradores</h6>
-
-                <h2 id="totalClientes"
-                    style="color:#00ff88;">
-                    0
-                </h2>
-
+                <h2 id="totalClientes" style="color:#00ff88;">0</h2>
             </div>
-
         </div>
 
-
         <div class="col-md-4">
-
             <div class="card p-3">
-
                 <h6>Status Sistema</h6>
-
-                <h2 style="color:#00ff88;">
-                    Online
-                </h2>
-
+                <h2 style="color:#00ff88;">Online</h2>
             </div>
-
         </div>
 
-
         <div class="col-md-4">
-
             <div class="card p-3">
-
                 <h6>Última Atualização</h6>
-
-                <h2 style="color:#00ff88;">
-                    Agora
-                </h2>
-
+                <h2 style="color:#00ff88;">Agora</h2>
             </div>
-
         </div>
 
     </div>
 
 
-    <!-- FORMULÁRIO -->
-
-    <div class="card p-3 mt-4">
+    <!-- FORMULÁRIO ADMIN -->
+    <div class="card p-3 mt-4"
+         id="areaAdmin"
+         style="display:none;">
 
         <h5>Adicionar Colaborador</h5>
 
-        <input id="nome"
-               class="form-control mt-2"
-               placeholder="Nome">
+        <input id="nome" class="form-control mt-2" placeholder="Nome">
 
-        <input id="email"
-               class="form-control mt-2"
-               placeholder="Email">
+        <input id="email" class="form-control mt-2" placeholder="Email">
 
-        <input id="telefone"
-               class="form-control mt-2"
-               placeholder="Telefone">
+        <input id="telefone" class="form-control mt-2" placeholder="Telefone">
 
-        <input id="empresa"
-               class="form-control mt-2"
-               placeholder="Empresa">
+        <input id="empresa" class="form-control mt-2" placeholder="Empresa">
 
-        <input id="horario"
-               class="form-control mt-2"
-               placeholder="Horário">
+        <input id="horario" class="form-control mt-2" placeholder="Horário">
 
         <input id="senha"
                type="password"
@@ -122,13 +116,10 @@
 
 
     <!-- TABELA -->
-
     <table class="table table-dark table-striped mt-4">
 
         <thead>
-
             <tr>
-
                 <th>ID</th>
                 <th>Nome</th>
                 <th>Email</th>
@@ -136,17 +127,12 @@
                 <th>Empresa</th>
                 <th>Horário</th>
                 <th>Ações</th>
-
             </tr>
-
         </thead>
 
-        <tbody id="tabela">
-
-        </tbody>
+        <tbody id="tabela"></tbody>
 
     </table>
-
 
     <script src="script.js"></script>
 

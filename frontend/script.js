@@ -1,83 +1,117 @@
-async function carregarClientes() {
+async function fazerLogin() {
 
-    const resposta = await fetch("/clientes");
-    const dados = await resposta.json();
+    const email = document.getElementById("loginEmail").value;
+    const senha = document.getElementById("loginSenha").value;
 
-    const clientes = dados.clientes;
+    const res = await fetch("/login", {
 
-    const tabela = document.getElementById("tabela");
-    const total = document.getElementById("totalClientes");
+        method: "POST",
 
-    tabela.innerHTML = "";
-    total.innerText = clientes.length;
-
-    clientes.forEach(cliente => {
-
-        tabela.innerHTML += `
-        <tr>
-
-            <td>${cliente.id}</td>
-
-            <td contenteditable="true"
-                onblur="salvarCampo(${cliente.id}, 'nome', this.innerText)">
-                ${cliente.nome}
-            </td>
-
-            <td contenteditable="true"
-                onblur="salvarCampo(${cliente.id}, 'email', this.innerText)">
-                ${cliente.email}
-            </td>
-
-            <td contenteditable="true"
-                onblur="salvarCampo(${cliente.id}, 'telefone', this.innerText)">
-                ${cliente.telefone}
-            </td>
-
-            <td contenteditable="true"
-                onblur="salvarCampo(${cliente.id}, 'empresa', this.innerText)">
-                ${cliente.empresa}
-            </td>
-
-            <td contenteditable="true"
-                onblur="salvarCampo(${cliente.id}, 'horario', this.innerText)">
-                ${cliente.horario}
-            </td>
-
-            <td>
-
-                <button
-                    class="btn btn-danger btn-sm"
-                    onclick="deletarCliente(${cliente.id})">
-
-                    Excluir
-
-                </button>
-
-            </td>
-
-        </tr>
-        `;
-    });
-}
-
-
-
-async function salvarCampo(id, campo, valor){
-
-    const resposta = await fetch(`/clientes/${id}`);
-    const cliente = await resposta.json();
-
-    cliente[campo] = valor;
-
-    await fetch(`/clientes/${id}`,{
-
-        method:"PUT",
-
-        headers:{
+        headers: {
             "Content-Type":"application/json"
         },
 
-        body:JSON.stringify(cliente)
+        body: JSON.stringify({
+            email,
+            senha
+        })
+
+    });
+
+    const data = await res.json();
+
+    if (res.ok){
+
+        localStorage.setItem(
+            "token",
+            data.token
+        );
+
+        document.getElementById(
+            "areaAdmin"
+        ).style.display = "block";
+
+        alert("Login realizado");
+
+        carregarClientes();
+
+    } else {
+
+        alert(data.erro);
+
+    }
+}
+
+
+async function carregarClientes(){
+
+    const res = await fetch("/clientes");
+
+    const data = await res.json();
+
+    const clientes = data.clientes;
+
+    const tabela =
+    document.getElementById("tabela");
+
+    const total =
+    document.getElementById("totalClientes");
+
+    tabela.innerHTML="";
+
+    total.innerText=
+    clientes.length;
+
+
+    const token =
+    localStorage.getItem("token");
+
+
+    clientes.forEach(c=>{
+
+        let botoes = "";
+
+        if(token){
+
+            botoes=`
+
+            <button
+            class="btn btn-danger btn-sm"
+            onclick="deletarCliente(${c.id})">
+
+            Excluir
+
+            </button>
+
+            `;
+
+        }
+
+        tabela.innerHTML +=`
+
+        <tr>
+
+        <td>${c.id}</td>
+
+        <td>${c.nome}</td>
+
+        <td>${c.email}</td>
+
+        <td>${c.telefone}</td>
+
+        <td>${c.empresa}</td>
+
+        <td>${c.horario}</td>
+
+        <td>
+
+        ${botoes}
+
+        </td>
+
+        </tr>
+
+        `;
 
     });
 
@@ -87,19 +121,29 @@ async function salvarCampo(id, campo, valor){
 
 async function criarCliente(){
 
-    const cliente = {
+    const token =
+    localStorage.getItem("token");
 
-        nome: document.getElementById("nome").value,
 
-        email: document.getElementById("email").value,
+    const cliente={
 
-        telefone: document.getElementById("telefone").value,
+        nome:
+        document.getElementById("nome").value,
 
-        empresa: document.getElementById("empresa").value,
+        email:
+        document.getElementById("email").value,
 
-        horario: document.getElementById("horario").value,
+        telefone:
+        document.getElementById("telefone").value,
 
-        senha: document.getElementById("senha").value
+        empresa:
+        document.getElementById("empresa").value,
+
+        horario:
+        document.getElementById("horario").value,
+
+        senha:
+        document.getElementById("senha").value
 
     };
 
@@ -109,15 +153,17 @@ async function criarCliente(){
         method:"POST",
 
         headers:{
-            "Content-Type":"application/json"
+
+            "Content-Type":"application/json",
+
+            "Authorization":
+            `Bearer ${token}`
+
         },
 
         body:JSON.stringify(cliente)
 
     });
-
-
-    limparCampos();
 
     carregarClientes();
 
@@ -127,9 +173,20 @@ async function criarCliente(){
 
 async function deletarCliente(id){
 
+    const token =
+    localStorage.getItem("token");
+
+
     await fetch(`/clientes/${id}`,{
 
-        method:"DELETE"
+        method:"DELETE",
+
+        headers:{
+
+            "Authorization":
+            `Bearer ${token}`
+
+        }
 
     });
 
@@ -138,15 +195,11 @@ async function deletarCliente(id){
 }
 
 
+if(localStorage.getItem("token")){
 
-function limparCampos(){
-
-    document.getElementById("nome").value="";
-    document.getElementById("email").value="";
-    document.getElementById("telefone").value="";
-    document.getElementById("empresa").value="";
-    document.getElementById("horario").value="";
-    document.getElementById("senha").value="";
+    document.getElementById(
+        "areaAdmin"
+    ).style.display="block";
 
 }
 
