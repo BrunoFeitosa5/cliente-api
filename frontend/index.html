@@ -10,11 +10,9 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="container mt-4">
 
-<div class="container mt-4">
-
-    <!-- NAV -->
+    <!-- NAVBAR -->
     <nav class="navbar navbar-dark px-3 nav-custom">
         <span class="logo">♻️ Time de Apoio Renov Smart</span>
         <span class="sub">Painel de Colaboradores</span>
@@ -28,7 +26,7 @@
         <input id="loginEmail" class="form-control mt-2" placeholder="Email">
         <input id="loginSenha" type="password" class="form-control mt-2" placeholder="Senha">
 
-        <button class="btn btn-login mt-3 w-100" onclick="fazerLogin()">
+        <button class="btn btn-login mt-3" onclick="fazerLogin()">
             Entrar
         </button>
 
@@ -60,7 +58,7 @@
 
     </div>
 
-    <!-- ADMIN -->
+    <!-- ADMIN (SEM BOTÃO SAIR AQUI!) -->
     <div class="card p-3 mt-4" id="areaAdmin" style="display:none;">
 
         <h5 class="titulo-branco">Adicionar Colaborador</h5>
@@ -74,11 +72,6 @@
 
         <button class="btn btn-success mt-3" onclick="criarCliente()">
             Adicionar
-        </button>
-
-        <!-- 🔥 BOTÃO SAIR (PARA TODOS OS USUÁRIOS) -->
-        <button class="btn btn-danger mt-4 w-100" onclick="logout()">
-            Sair
         </button>
 
     </div>
@@ -102,16 +95,14 @@
 
     </table>
 
-    <!-- 🔥 BOTÃO SAIR PARA USUÁRIO NORMAL (FORA DO ADMIN) -->
-    <div class="text-center mt-3">
-        <button class="btn btn-danger w-50" onclick="logout()">
+    <!-- 🔥 ÚNICO BOTÃO SAIR (FORA DO ADMIN - SEM DUPLICAÇÃO) -->
+    <div class="text-center mt-4">
+        <button class="btn btn-danger" onclick="logout()">
             Sair
         </button>
     </div>
 
-</div>
-
-<script src="script.js"></script>
+    <script src="script.js"></script>
 
 </body>
 </html>

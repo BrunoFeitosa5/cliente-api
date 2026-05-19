@@ -1,3 +1,5 @@
+let modoAdmin = false;
+
 async function fazerLogin() {
 
     const email = document.getElementById("loginEmail").value;
@@ -11,33 +13,50 @@ async function fazerLogin() {
 
     const data = await res.json();
 
-    if (res.ok) {
+    if (!res.ok) {
+        alert(data.erro);
+        return;
+    }
 
-        localStorage.setItem("token", data.access_token);
+    localStorage.setItem("token", data.access_token);
 
-        document.getElementById("areaAdmin").style.display = "block";
+    modoAdmin = true;
+
+    document.getElementById("areaAdmin").style.display = "block";
+
+    carregarClientes();
+}
+
+
+/* =========================
+   LOGOUT 100% CORRETO
+   ========================= */
+function logout() {
+
+    // 🔥 CASO 1: ainda está em modo admin
+    if (modoAdmin) {
+
+        modoAdmin = false;
+
+        document.getElementById("areaAdmin").style.display = "none";
 
         carregarClientes();
 
-    } else {
-        alert(data.erro);
+        alert("Saiu do modo admin");
+
+        return;
     }
-}
 
-/* LOGOUT GLOBAL (ADMIN E USUÁRIO) */
-function logout() {
-
+    // 🔥 CASO 2: já está fora do admin → sair do sistema
     localStorage.removeItem("token");
 
-    document.getElementById("areaAdmin").style.display = "none";
-
-    document.getElementById("loginEmail").value = "";
-    document.getElementById("loginSenha").value = "";
-
-    // usuário normal vai pro Google
     window.location.href = "https://www.google.com";
 }
 
+
+/* =========================
+   CARREGAR CLIENTES
+   ========================= */
 async function carregarClientes() {
 
     const res = await fetch("/clientes");
@@ -50,7 +69,6 @@ async function carregarClientes() {
     total.innerText = data.clientes.length;
 
     data.clientes.forEach(c => {
-
         tabela.innerHTML += `
         <tr>
             <td>${c.id}</td>
@@ -64,8 +82,16 @@ async function carregarClientes() {
     });
 }
 
-if (localStorage.getItem("token")) {
-    document.getElementById("areaAdmin").style.display = "block";
-}
 
-carregarClientes();
+/* =========================
+   INIT CORRETO
+   ========================= */
+window.onload = () => {
+
+    if (localStorage.getItem("token")) {
+        modoAdmin = true;
+        document.getElementById("areaAdmin").style.display = "block";
+    }
+
+    carregarClientes();
+};
