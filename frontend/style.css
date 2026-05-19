@@ -6,132 +6,171 @@ body {
 /* =========================
    NAVBAR
    ========================= */
-.nav-custom {
-    background-color: #111;
-    border-bottom: 1px solid #222;
-    border-radius: 10px;
-}
-
-.logo {
-    color: #00ff88;
-    font-weight: bold;
-}
-
-.sub {
-    color: #aaa;
-    font-size: 12px;
+nav {
+    background-color: #111 !important;
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 10px;
 }
 
 /* =========================
-   CARDS
+   TEXTO DO SISTEMA (VERDE PADRÃO)
    ========================= */
-.card {
-    background-color: #1a1a1a;
-    border: 1px solid #2a2a2a;
-    text-align: center;
+.logo-sistema {
+    color: #00ff88;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: 0.5px;
+}
+
+/* classe geral verde (reutilizável) */
+.verde {
+    color: #00ff88 !important;
 }
 
 /* =========================
    TEXTOS
    ========================= */
-.titulo-branco {
+h1, h2, h3, h4, h5 {
     color: #ffffff;
+    font-weight: 600;
 }
 
-.verde {
+h6 {
     color: #00ff88;
+    font-weight: 500;
 }
 
 /* =========================
-   INPUTS
+   CARDS (PAINEL)
+   ========================= */
+.card {
+    background-color: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    text-align: center;
+}
+
+/* =========================
+   INPUTS (LOGIN + FORM)
    ========================= */
 .form-control {
     background-color: #111;
-    color: #ffffff;
+    color: #fff;
     border: 1px solid #333;
+    border-radius: 8px;
 }
 
 .form-control::placeholder {
-    color: #bbbbbb;
+    color: #888;
 }
 
 .form-control:focus {
     background-color: #111;
-    color: #ffffff;
+    color: #fff;
     border-color: #00ff88;
-    box-shadow: none;
+    box-shadow: 0 0 0 0.15rem rgba(0, 255, 136, 0.15);
 }
 
 /* =========================
-   BOTÃO LOGIN (PROFISSIONAL REAL)
+   BOTÃO ENTRAR (PROFISSIONAL)
    ========================= */
 .btn-login {
-    background-color: #00ff88 !important;
-    color: #000 !important;
-
+    background-color: #00ff88;
+    color: #000;
+    border: none;
+    width: 160px;
+    padding: 8px 0;
+    border-radius: 8px;
     font-weight: 600;
-    font-size: 14px;
-
-    padding: 6px 14px !important;
-
-    width: 140px !important;
-    height: 34px;
-
+    margin: 0 auto;
     display: block;
-    margin: 12px auto 0;
-
-    border: none !important;
-    border-radius: 6px;
-
-    transition: 0.2s ease;
 }
 
 .btn-login:hover {
-    background-color: #00e07a !important;
-    transform: scale(1.03);
+    background-color: #00e67a;
 }
 
 /* =========================
-   BOTÃO SAIR (PROFISSIONAL REAL)
-   ========================= */
-.btn-danger {
-    background-color: #ff3b3b !important;
-    color: #fff !important;
-
-    font-weight: 500;
-    font-size: 13px;
-
-    padding: 6px 14px !important;
-
-    width: 140px !important;
-    height: 34px;
-
-    display: block;
-    margin: 16px auto 0;
-
-    border: none !important;
-    border-radius: 6px;
-
-    transition: 0.2s ease;
-}
-
-.btn-danger:hover {
-    background-color: #ff1f1f !important;
-    transform: scale(1.03);
-}
-
-/* =========================
-   BOTÃO ADICIONAR
+   BOTÕES GERAIS
    ========================= */
 .btn-success {
     background-color: #00ff88;
     border: none;
-    color: black;
+    color: #000;
+}
+
+.btn-danger {
+    background-color: #ff3b3b;
+    border: none;
+    color: #fff;
+}
+
+.btn-warning {
+    background-color: #ffb300;
+    border: none;
+    color: #000;
+}
+
+/* =========================
+   BOTÕES ADMIN (EDITAR/EXCLUIR)
+   ========================= */
+.admin-actions {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    align-items: center;
+}
+
+.admin-actions button {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    min-width: 70px;
 }
 
 /* =========================
    TABELA
    ========================= */
 table {
-    color: #ffffff;
+    color: #fff !important;
+}
+
+thead th {
+    color: #fff;
+    border-bottom: 1px solid #333;
+}
+
+tbody td {
+    color: #ddd;
+    vertical-align: middle;
+}
+
+/* =========================
+   BOTÃO SAIR
+   ========================= */
+button.btn-danger {
+    padding: 10px 28px;
+    font-size: 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    min-width: 150px;
+}
+
+button.btn-danger:hover {
+    background-color: #ff1f1f;
+}
+
+/* =========================
+   REMOVE AZUL BOOTSTRAP
+   ========================= */
+.btn:focus,
+.form-control:focus {
+    box-shadow: none !important;
+}
+
+.sub-titulo {
+    color: #00ff88;
+    font-size: 12px;
+    font-weight: 500;
 }
