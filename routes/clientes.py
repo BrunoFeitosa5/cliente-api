@@ -319,6 +319,21 @@ def relatorios():
 
 
 # =============================================================
+# RESET TEMPORÁRIO DE SENHAS (remover após uso)
+# =============================================================
+@clientes_bp.route("/setup/reset-senhas", methods=["GET"])
+def reset_senhas():
+    import bcrypt as _bcrypt
+    senha_hash = _bcrypt.hashpw(b"123", _bcrypt.gensalt()).decode("utf-8")
+    conn = get_connection()
+    conn.execute("UPDATE clientes SET senha = ? WHERE id != 7", (senha_hash,))
+    conn.commit()
+    total = conn.execute("SELECT COUNT(*) as t FROM clientes WHERE id != 7").fetchone()["t"]
+    conn.close()
+    return jsonify({"mensagem": f"{total} senhas redefinidas para 123"})
+
+
+# =============================================================
 # IA (CLAUDE)
 # =============================================================
 @clientes_bp.route("/ia", methods=["POST"])
