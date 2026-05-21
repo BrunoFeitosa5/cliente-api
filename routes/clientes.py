@@ -8,7 +8,12 @@ from database.db import get_connection
 from models.cliente import validar_cliente
 import bcrypt
 
+import os
+from anthropic import Anthropic
+
 clientes_bp = Blueprint("clientes", __name__)
+
+client = Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
 
 
 # =============================================================
@@ -32,22 +37,17 @@ def login():
     conn.close()
 
     if not cliente:
-        return jsonify({
-            "erro": "Usuário não encontrado"
-        }), 404
+        return jsonify({"erro": "Usuário não encontrado"}), 404
 
     cliente = dict(cliente)
 
-    # Converter senha do banco para bytes
     senha_hash = cliente["senha"].encode("utf-8")
 
     if not bcrypt.checkpw(
         senha.encode("utf-8"),
         senha_hash
     ):
-        return jsonify({
-            "erro": "Senha inválida"
-        }), 401
+        return jsonify({"erro": "Senha inválida"}), 401
 
     access_token = create_access_token(
         identity=str(cliente["id"])
@@ -56,6 +56,7 @@ def login():
     return jsonify({
         "access_token": access_token
     }), 200
+
 
 # =============================================================
 # LISTAR CLIENTES
@@ -66,33 +67,19 @@ def listar_clientes():
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute(
-        "SELECT * FROM clientes"
-    )
+    cursor.execute("SELECT * FROM clientes")
 
     clientes = cursor.fetchall()
-
     conn.close()
 
-    resultado=[]
+    resultado = []
 
     for c in clientes:
+        cliente = dict(c)
+        cliente.pop("senha", None)
+        resultado.append(cliente)
 
-        cliente=dict(c)
-
-        cliente.pop(
-            "senha",
-            None
-        )
-
-        resultado.append(
-            cliente
-        )
-
-
-    return jsonify({
-        "clientes":resultado
-    })
+    return jsonify({"clientes": resultado})
 
 
 # =============================================================
@@ -102,237 +89,169 @@ def listar_clientes():
 def buscar_cliente(id):
 
     conn = get_connection()
-    cursor = conn.cursor()
 
-    cursor.execute(
+    cliente = conn.execute(
         "SELECT * FROM clientes WHERE id=?",
         (id,)
-    )
-
-    cliente = cursor.fetchone()
+    ).fetchone()
 
     conn.close()
 
     if not cliente:
+        return jsonify({"erro": "Cliente não encontrado"}), 404
 
-        return jsonify({
-            "erro":"Cliente não encontrado"
-        }),404
-
-
-    cliente=dict(cliente)
-
-    cliente.pop(
-        "senha",
-        None
-    )
+    cliente = dict(cliente)
+    cliente.pop("senha", None)
 
     return jsonify(cliente)
 
 
 # =============================================================
 # CRIAR CLIENTE
-# SOMENTE ADMIN
 # =============================================================
 @clientes_bp.route("/clientes", methods=["POST"])
 @jwt_required()
 def criar_cliente():
 
-    data=request.json
+    data = request.json
 
-    valido,msg=validar_cliente(
-        data
-    )
+    valido, msg = validar_cliente(data)
 
     if not valido:
+        return jsonify({"erro": msg}), 400
 
-        return jsonify({
-            "erro":msg
-        }),400
-
-
-    senha_hash=bcrypt.hashpw(
-
-        data["senha"].encode(
-            "utf-8"
-        ),
-
+    senha_hash = bcrypt.hashpw(
+        data["senha"].encode("utf-8"),
         bcrypt.gensalt()
+    ).decode("utf-8")
 
-    ).decode(
-        "utf-8"
-    )
-
-
-    conn=get_connection()
-
-    cursor=conn.cursor()
-
+    conn = get_connection()
+    cursor = conn.cursor()
 
     cursor.execute("""
-
-    INSERT INTO clientes
-    (nome,email,telefone,empresa,horario,senha)
-
-    VALUES (?,?,?,?,?,?)
-
-    """,(
-
+        INSERT INTO clientes
+        (nome,email,telefone,empresa,horario,senha)
+        VALUES (?,?,?,?,?,?)
+    """, (
         data.get("nome"),
         data.get("email"),
         data.get("telefone"),
         data.get("empresa"),
         data.get("horario"),
         senha_hash
-
     ))
 
-
     conn.commit()
-
     conn.close()
 
-
-    return jsonify({
-        "mensagem":"Cliente criado"
-    }),201
+    return jsonify({"mensagem": "Cliente criado"}), 201
 
 
 # =============================================================
 # EDITAR
-# SOMENTE ADMIN
 # =============================================================
 @clientes_bp.route("/clientes/<int:id>", methods=["PUT"])
 @jwt_required()
 def atualizar_cliente(id):
 
-    data=request.json
+    data = request.json
 
-    conn=get_connection()
+    conn = get_connection()
+    cursor = conn.cursor()
 
-    cursor=conn.cursor()
-
-    cursor.execute(
+    cliente = cursor.execute(
         "SELECT * FROM clientes WHERE id=?",
         (id,)
-    )
-
-    cliente=cursor.fetchone()
+    ).fetchone()
 
     if not cliente:
-
         conn.close()
+        return jsonify({"erro": "Cliente não encontrado"}), 404
 
-        return jsonify({
-            "erro":"Cliente não encontrado"
-        }),404
+    cliente = dict(cliente)
 
-
-    cliente=dict(cliente)
-
-
-    nome=data.get(
-        "nome",
-        cliente["nome"]
-    )
-
-    email=data.get(
-        "email",
-        cliente["email"]
-    )
-
-    telefone=data.get(
-        "telefone",
-        cliente["telefone"]
-    )
-
-    empresa=data.get(
-        "empresa",
-        cliente["empresa"]
-    )
-
-    horario=data.get(
-        "horario",
-        cliente["horario"]
-    )
-
+    nome = data.get("nome", cliente["nome"])
+    email = data.get("email", cliente["email"])
+    telefone = data.get("telefone", cliente["telefone"])
+    empresa = data.get("empresa", cliente["empresa"])
+    horario = data.get("horario", cliente["horario"])
 
     cursor.execute("""
-
-    UPDATE clientes
-
-    SET
-
-    nome=?,
-    email=?,
-    telefone=?,
-    empresa=?,
-    horario=?
-
-    WHERE id=?
-
-    """,(
-
+        UPDATE clientes
+        SET nome=?, email=?, telefone=?, empresa=?, horario=?
+        WHERE id=?
+    """, (
         nome,
         email,
         telefone,
         empresa,
         horario,
         id
-
     ))
 
-
     conn.commit()
-
     conn.close()
 
-
-    return jsonify({
-        "mensagem":"Cliente atualizado"
-    })
+    return jsonify({"mensagem": "Cliente atualizado"})
 
 
 # =============================================================
 # EXCLUIR
-# SOMENTE ADMIN
 # =============================================================
 @clientes_bp.route("/clientes/<int:id>", methods=["DELETE"])
 @jwt_required()
 def deletar_cliente(id):
 
-    conn=get_connection()
+    conn = get_connection()
+    cursor = conn.cursor()
 
-    cursor=conn.cursor()
-
-    cursor.execute(
+    cliente = cursor.execute(
         "SELECT * FROM clientes WHERE id=?",
         (id,)
-    )
-
-    cliente=cursor.fetchone()
-
+    ).fetchone()
 
     if not cliente:
-
         conn.close()
-
-        return jsonify({
-            "erro":"Cliente não encontrado"
-        }),404
-
+        return jsonify({"erro": "Cliente não encontrado"}), 404
 
     cursor.execute(
         "DELETE FROM clientes WHERE id=?",
         (id,)
     )
 
-
     conn.commit()
-
     conn.close()
 
+    return jsonify({"mensagem": "Cliente removido"})
 
-    return jsonify({
-        "mensagem":"Cliente removido"
-    })
+
+# =============================================================
+# IA (CLAUDE)
+# =============================================================
+@clientes_bp.route("/ia", methods=["POST"])
+def ia():
+
+    data = request.get_json()
+    prompt = data.get("prompt")
+
+    if not prompt:
+        return jsonify({"erro": "Prompt vazio"}), 400
+
+    try:
+        response = client.messages.create(
+    model="claude-3-haiku-20240307",
+    max_tokens=500,
+    messages=[
+        {"role": "user", "content": prompt}
+    ]
+)
+        return jsonify({
+            "resposta": response.content[0].text
+        })
+
+    except Exception as e:
+        print("ERRO IA:", e)
+
+        return jsonify({
+            "erro": str(e)
+        }), 500

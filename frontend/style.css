@@ -1,6 +1,7 @@
 body {
     background-color: #0f0f0f;
     color: #ffffff;
+    font-family: 'Poppins', sans-serif;
 }
 
 /* =========================
@@ -10,20 +11,34 @@ nav {
     background-color: #111 !important;
     border: 1px solid #222;
     border-radius: 12px;
-    padding: 10px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 /* =========================
-   TEXTO DO SISTEMA (VERDE PADRÃO)
+   LOGO E SUBTÍTULO
    ========================= */
 .logo-sistema {
     color: #00ff88;
+    font-family: 'Poppins', sans-serif;
     font-weight: 700;
     font-size: 18px;
     letter-spacing: 0.5px;
 }
 
-/* classe geral verde (reutilizável) */
+.sub-titulo {
+    color: #00ff88;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+}
+
+/* =========================
+   VERDE (reutilizável)
+   ========================= */
 .verde {
     color: #00ff88 !important;
 }
@@ -42,27 +57,75 @@ h6 {
 }
 
 /* =========================
-   CARDS (PAINEL)
+   CARDS
    ========================= */
 .card {
     background-color: #1a1a1a;
     border: 1px solid #2a2a2a;
     border-radius: 12px;
     text-align: center;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    border-color: #3a3a3a;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
 /* =========================
-   INPUTS (LOGIN + FORM)
+   LOGIN CARD
+   ========================= */
+.login-card {
+    width: 100%;
+    text-align: center;
+    padding: 40px 0 !important;
+}
+
+.login-form-inner {
+    width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
+}
+
+.login-icon {
+    font-size: 36px;
+    line-height: 1;
+}
+
+.login-card h5 {
+    font-size: 20px;
+    letter-spacing: 0.3px;
+}
+
+.login-divider {
+    border-color: #2a2a2a;
+    margin: 16px 0;
+}
+
+/* =========================
+   INPUTS ÁREA ADMIN (centralizados)
+   ========================= */
+#areaAdmin .form-control {
+    text-align: center;
+}
+
+#areaAdmin .form-control::placeholder {
+    text-align: center;
+}
+
+/* =========================
+   INPUTS
    ========================= */
 .form-control {
     background-color: #111;
     color: #fff;
     border: 1px solid #333;
     border-radius: 8px;
+    transition: border-color 0.15s;
 }
 
 .form-control::placeholder {
-    color: #888;
+    color: #666;
 }
 
 .form-control:focus {
@@ -73,7 +136,7 @@ h6 {
 }
 
 /* =========================
-   BOTÃO ENTRAR (PROFISSIONAL)
+   BOTÃO ENTRAR
    ========================= */
 .btn-login {
     background-color: #00ff88;
@@ -85,10 +148,16 @@ h6 {
     font-weight: 600;
     margin: 0 auto;
     display: block;
+    transition: background-color 0.15s, transform 0.1s;
 }
 
 .btn-login:hover {
     background-color: #00e67a;
+    transform: translateY(-1px);
+}
+
+.btn-login:active {
+    transform: translateY(0);
 }
 
 /* =========================
@@ -98,18 +167,34 @@ h6 {
     background-color: #00ff88;
     border: none;
     color: #000;
+    transition: background-color 0.15s, transform 0.1s;
+}
+
+.btn-success:hover {
+    background-color: #00e67a;
+    transform: translateY(-1px);
 }
 
 .btn-danger {
     background-color: #ff3b3b;
     border: none;
     color: #fff;
+    transition: background-color 0.15s;
+}
+
+.btn-danger:hover {
+    background-color: #ff1f1f;
 }
 
 .btn-warning {
     background-color: #ffb300;
     border: none;
     color: #000;
+    transition: background-color 0.15s;
+}
+
+.btn-warning:hover {
+    background-color: #e6a200;
 }
 
 /* =========================
@@ -123,10 +208,11 @@ h6 {
 }
 
 .admin-actions button {
-    font-size: 12px;
-    padding: 4px 10px;
-    border-radius: 6px;
-    min-width: 70px;
+    font-size: 12px !important;
+    padding: 4px 0 !important;
+    border-radius: 6px !important;
+    width: 72px !important;
+    min-width: unset !important;
 }
 
 /* =========================
@@ -137,13 +223,20 @@ table {
 }
 
 thead th {
-    color: #fff;
+    color: #00ff88;
     border-bottom: 1px solid #333;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.3px;
 }
 
 tbody td {
     color: #ddd;
     vertical-align: middle;
+}
+
+tbody tr {
+    transition: background-color 0.15s;
 }
 
 /* =========================
@@ -157,10 +250,6 @@ button.btn-danger {
     min-width: 150px;
 }
 
-button.btn-danger:hover {
-    background-color: #ff1f1f;
-}
-
 /* =========================
    REMOVE AZUL BOOTSTRAP
    ========================= */
@@ -169,8 +258,9 @@ button.btn-danger:hover {
     box-shadow: none !important;
 }
 
-.sub-titulo {
-    color: #00ff88;
-    font-size: 12px;
-    font-weight: 500;
+/* =========================
+   TOAST (sobrescreve bg escuro)
+   ========================= */
+#toast .toast-body {
+    font-size: 14px;
 }

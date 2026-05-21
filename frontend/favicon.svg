@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <marker id="a" markerUnits="userSpaceOnUse"
+            markerWidth="20" markerHeight="20"
+            refX="18" refY="10" orient="auto">
+      <polygon points="0,0 20,10 0,20" fill="#27ae60"/>
+    </marker>
+  </defs>
+
+  <!-- Arco 1: sentido horário pelo topo (de upper-left até right) -->
+  <path d="M 26,36 A 28,28 0 0,1 78,50"
+        stroke="#27ae60" stroke-width="11" fill="none"
+        marker-end="url(#a)"/>
+
+  <!-- Arco 2: sentido horário pelo fundo (de lower-right até left) -->
+  <path d="M 74,64 A 28,28 0 0,1 22,50"
+        stroke="#27ae60" stroke-width="11" fill="none"
+        marker-end="url(#a)"/>
+</svg>

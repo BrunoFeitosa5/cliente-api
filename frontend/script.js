@@ -1,10 +1,39 @@
 let modoAdmin = false;
 
+
+/* =========================
+   TOAST
+   ========================= */
+function mostrarToast(msg, tipo = "sucesso") {
+    const toastEl = document.getElementById("toast");
+    const toastMsg = document.getElementById("toastMsg");
+
+    toastEl.classList.remove("bg-success", "bg-danger", "bg-warning");
+
+    if (tipo === "erro") toastEl.classList.add("bg-danger");
+    else if (tipo === "aviso") toastEl.classList.add("bg-warning");
+    else toastEl.classList.add("bg-success");
+
+    toastMsg.textContent = msg;
+
+    bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 3000 }).show();
+}
+
+
+/* =========================
+   ESTADO DA UI
+   ========================= */
+function atualizarUI(logado) {
+    document.getElementById("loginBox").style.display = logado ? "none" : "block";
+    document.getElementById("areaAdmin").style.display = logado ? "block" : "none";
+    document.getElementById("containerSair").style.display = logado ? "block" : "none";
+}
+
+
 /* =========================
    LOGIN
    ========================= */
 async function fazerLogin() {
-
     const email = document.getElementById("loginEmail").value;
     const senha = document.getElementById("loginSenha").value;
 
@@ -17,42 +46,32 @@ async function fazerLogin() {
     const data = await res.json();
 
     if (!res.ok) {
-        alert(data.erro);
+        mostrarToast(data.erro || "Erro ao fazer login", "erro");
         return;
     }
 
     localStorage.setItem("token", data.access_token);
     localStorage.setItem("isAdmin", "true");
-
     modoAdmin = true;
 
-    document.getElementById("areaAdmin").style.display = "block";
-
+    atualizarUI(true);
     carregarClientes();
 }
 
 
 /* =========================
-   LOGOUT (2 ETAPAS)
+   LOGOUT
    ========================= */
 function logout() {
+    if (!confirm("Deseja encerrar a sessão?")) return;
 
-    if (modoAdmin) {
-
-        modoAdmin = false;
-        localStorage.setItem("isAdmin", "false");
-
-        document.getElementById("areaAdmin").style.display = "none";
-
-        carregarClientes();
-
-        return;
-    }
-
+    modoAdmin = false;
     localStorage.removeItem("token");
     localStorage.removeItem("isAdmin");
 
-    window.location.href = "https://www.google.com";
+    atualizarUI(false);
+    mostrarToast("Sessão encerrada.", "aviso");
+    carregarClientes();
 }
 
 
@@ -60,34 +79,24 @@ function logout() {
    CARREGAR CLIENTES
    ========================= */
 async function carregarClientes() {
-
     const res = await fetch("/clientes");
     const data = await res.json();
 
     const tabela = document.getElementById("tabela");
-    const total = document.getElementById("totalClientes");
 
     tabela.innerHTML = "";
-    total.innerText = data.clientes.length;
 
-    const isAdmin = localStorage.getItem("isAdmin") === "true";
+    document.getElementById("totalClientes").innerText = data.clientes.length;
+    document.getElementById("ultimaAtualizacao").innerText = new Date().toLocaleTimeString("pt-BR");
 
     data.clientes.forEach(c => {
-
         let botoes = "";
 
-        if (isAdmin) {
+        if (modoAdmin) {
             botoes = `
                 <div class="admin-actions">
-
-                    <button class="btn btn-warning btn-sm" onclick="editarCliente(${c.id})">
-                        ✏ Editar
-                    </button>
-
-                    <button class="btn btn-danger btn-sm" onclick="deletarCliente(${c.id})">
-                        🗑 Excluir
-                    </button>
-
+                    <button class="btn btn-warning btn-sm" onclick="editarCliente(${c.id})">Editar</button>
+                    <button class="btn btn-danger btn-sm" onclick="deletarCliente(${c.id})">Excluir</button>
                 </div>
             `;
         }
@@ -95,30 +104,12 @@ async function carregarClientes() {
         tabela.innerHTML += `
         <tr>
             <td>${c.id}</td>
-
-            <td contenteditable="${isAdmin}" id="nome-${c.id}">
-                ${c.nome}
-            </td>
-
-            <td contenteditable="${isAdmin}" id="email-${c.id}">
-                ${c.email}
-            </td>
-
-            <td contenteditable="${isAdmin}" id="telefone-${c.id}">
-                ${c.telefone}
-            </td>
-
-            <td contenteditable="${isAdmin}" id="empresa-${c.id}">
-                ${c.empresa}
-            </td>
-
-            <td contenteditable="${isAdmin}" id="horario-${c.id}">
-                ${c.horario}
-            </td>
-
-            <td>
-                ${botoes}
-            </td>
+            <td contenteditable="${modoAdmin}" id="nome-${c.id}">${c.nome}</td>
+            <td contenteditable="${modoAdmin}" id="email-${c.id}">${c.email}</td>
+            <td contenteditable="${modoAdmin}" id="telefone-${c.id}">${c.telefone}</td>
+            <td contenteditable="${modoAdmin}" id="empresa-${c.id}">${c.empresa}</td>
+            <td contenteditable="${modoAdmin}" id="horario-${c.id}">${c.horario}</td>
+            <td>${botoes}</td>
         </tr>
         `;
     });
@@ -129,19 +120,16 @@ async function carregarClientes() {
    CRIAR CLIENTE
    ========================= */
 async function criarCliente() {
-
     const token = localStorage.getItem("token");
 
-    const cliente = {
-        nome: document.getElementById("nome").value,
-        email: document.getElementById("email").value,
-        telefone: document.getElementById("telefone").value,
-        empresa: document.getElementById("empresa").value,
-        horario: document.getElementById("horario").value,
-        senha: document.getElementById("senha").value
-    };
+    const campos = ["nome", "email", "telefone", "empresa", "horario", "senha"];
 
-    await fetch("/clientes", {
+    const cliente = {};
+    campos.forEach(id => {
+        cliente[id] = document.getElementById(id).value;
+    });
+
+    const res = await fetch("/clientes", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -150,6 +138,17 @@ async function criarCliente() {
         body: JSON.stringify(cliente)
     });
 
+    if (!res.ok) {
+        const data = await res.json();
+        mostrarToast(data.erro || "Erro ao adicionar colaborador", "erro");
+        return;
+    }
+
+    campos.forEach(id => {
+        document.getElementById(id).value = "";
+    });
+
+    mostrarToast("Colaborador adicionado com sucesso!");
     carregarClientes();
 }
 
@@ -158,18 +157,17 @@ async function criarCliente() {
    EDITAR CLIENTE
    ========================= */
 async function editarCliente(id) {
-
     const token = localStorage.getItem("token");
 
     const cliente = {
-        nome: document.getElementById(`nome-${id}`).innerText,
-        email: document.getElementById(`email-${id}`).innerText,
-        telefone: document.getElementById(`telefone-${id}`).innerText,
-        empresa: document.getElementById(`empresa-${id}`).innerText,
-        horario: document.getElementById(`horario-${id}`).innerText
+        nome: document.getElementById(`nome-${id}`).innerText.trim(),
+        email: document.getElementById(`email-${id}`).innerText.trim(),
+        telefone: document.getElementById(`telefone-${id}`).innerText.trim(),
+        empresa: document.getElementById(`empresa-${id}`).innerText.trim(),
+        horario: document.getElementById(`horario-${id}`).innerText.trim()
     };
 
-    await fetch(`/clientes/${id}`, {
+    const res = await fetch(`/clientes/${id}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
@@ -178,8 +176,12 @@ async function editarCliente(id) {
         body: JSON.stringify(cliente)
     });
 
-    alert("Atualizado com sucesso");
+    if (!res.ok) {
+        mostrarToast("Erro ao atualizar colaborador", "erro");
+        return;
+    }
 
+    mostrarToast("Colaborador atualizado com sucesso!");
     carregarClientes();
 }
 
@@ -188,16 +190,21 @@ async function editarCliente(id) {
    DELETAR CLIENTE
    ========================= */
 async function deletarCliente(id) {
+    if (!confirm("Tem certeza que deseja excluir este colaborador?")) return;
 
     const token = localStorage.getItem("token");
 
-    await fetch(`/clientes/${id}`, {
+    const res = await fetch(`/clientes/${id}`, {
         method: "DELETE",
-        headers: {
-            "Authorization": `Bearer ${token}`
-        }
+        headers: { "Authorization": `Bearer ${token}` }
     });
 
+    if (!res.ok) {
+        mostrarToast("Erro ao excluir colaborador", "erro");
+        return;
+    }
+
+    mostrarToast("Colaborador excluído.", "aviso");
     carregarClientes();
 }
 
@@ -206,11 +213,9 @@ async function deletarCliente(id) {
    INIT
    ========================= */
 window.onload = () => {
-
     if (localStorage.getItem("isAdmin") === "true") {
         modoAdmin = true;
-        document.getElementById("areaAdmin").style.display = "block";
+        atualizarUI(true);
     }
-
     carregarClientes();
 };
