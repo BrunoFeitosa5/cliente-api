@@ -248,7 +248,11 @@ def colaborador_login():
 
     cliente = dict(cliente)
 
-    if not bcrypt.checkpw(senha.encode("utf-8"), cliente["senha"].encode("utf-8")):
+    senha_hash = cliente["senha"]
+    if isinstance(senha_hash, str):
+        senha_hash = senha_hash.encode("utf-8")
+
+    if not bcrypt.checkpw(senha.encode("utf-8"), senha_hash):
         conn.close()
         return jsonify({"erro": "Senha inválida"}), 401
 
