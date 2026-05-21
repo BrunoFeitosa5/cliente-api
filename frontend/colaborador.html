@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área do Colaborador — Apoio Renov</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="container mt-4">
+
+    <!-- TOAST -->
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999">
+        <div id="toast" class="toast align-items-center border-0 text-white" role="alert">
+            <div class="d-flex">
+                <div class="toast-body fw-semibold" id="toastMsg"></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-dark px-3 nav-custom">
+        <span class="logo-sistema">♻️ Time de Apoio Renov Smart</span>
+        <span class="sub-titulo ms-auto">Área do Colaborador</span>
+    </nav>
+
+    <!-- NAV PÁGINAS -->
+    <div class="nav-pages mt-3">
+        <a href="/" class="nav-link-page">Painel</a>
+        <a href="/status" class="nav-link-page">Status</a>
+        <a href="/relatorios" class="nav-link-page">Relatórios</a>
+        <a href="/colaborador" class="nav-link-page active">Área do Colaborador</a>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="card login-card mt-4" id="loginColab">
+        <div class="login-form-inner">
+            <div class="login-icon">👤</div>
+            <h5 class="verde mt-2 mb-0">Área do Colaborador</h5>
+            <small style="color:#555;">Entre para marcar sua presença</small>
+            <hr class="login-divider">
+            <input id="colabEmail" class="form-control mt-2" placeholder="Email" type="email">
+            <input id="colabSenha" type="password" class="form-control mt-2" placeholder="Senha">
+            <button class="btn btn-login mt-3" onclick="entrarColab()">Entrar</button>
+        </div>
+    </div>
+
+    <!-- ÁREA ONLINE -->
+    <div class="card mt-4 p-4 text-center" id="areaOnline" style="display:none;">
+        <div class="online-pulse mx-auto mb-3"></div>
+        <h4 class="verde" id="nomeOnline">—</h4>
+        <p style="color:#666; font-size:14px;">Você está online e visível para a equipe.</p>
+        <button class="btn btn-danger mt-2" onclick="sairColab()">Encerrar Presença</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="colaborador.js"></script>
+
+</body>
+</html>

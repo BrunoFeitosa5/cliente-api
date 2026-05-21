@@ -20,9 +20,17 @@ def init_db():
             telefone TEXT,
             empresa TEXT,
             horario TEXT,
-            senha TEXT NOT NULL
+            senha TEXT NOT NULL,
+            status TEXT DEFAULT 'offline',
+            ultimo_acesso TEXT
         )
     """)
+
+    for col, definition in [("status", "TEXT DEFAULT 'offline'"), ("ultimo_acesso", "TEXT")]:
+        try:
+            cursor.execute(f"ALTER TABLE clientes ADD COLUMN {col} {definition}")
+        except Exception:
+            pass
 
     conn.commit()
     conn.close()

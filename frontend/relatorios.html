@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios — Apoio Renov</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="container mt-4">
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-dark px-3 nav-custom">
+        <span class="logo-sistema">♻️ Time de Apoio Renov Smart</span>
+        <span class="sub-titulo ms-auto">Relatórios</span>
+    </nav>
+
+    <!-- NAV PÁGINAS -->
+    <div class="nav-pages mt-3">
+        <a href="/" class="nav-link-page">Painel</a>
+        <a href="/status" class="nav-link-page">Status</a>
+        <a href="/relatorios" class="nav-link-page active">Relatórios</a>
+        <a href="/colaborador" class="nav-link-page">Área do Colaborador</a>
+    </div>
+
+    <!-- RESUMO -->
+    <div class="row mt-4 text-center">
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h6 class="verde">Total de Colaboradores</h6>
+                <h2 class="verde" id="total">0</h2>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h6 style="color:#00ff88">Online Agora</h6>
+                <h2 style="color:#00ff88" id="qtdOnline">0</h2>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h6 style="color:#666">Offline</h6>
+                <h2 style="color:#666" id="qtdOffline">0</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABELA -->
+    <div class="card p-3 mt-4">
+        <h5 class="verde mb-3">Colaboradores</h5>
+        <table class="table table-dark table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Empresa</th>
+                    <th>Horário</th>
+                    <th>Status</th>
+                    <th>Último Acesso</th>
+                </tr>
+            </thead>
+            <tbody id="tabelaRelatorio"></tbody>
+        </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        async function carregarRelatorio() {
+            const res = await fetch("/api/relatorios");
+            const data = await res.json();
+
+            document.getElementById("total").innerText = data.total;
+            document.getElementById("qtdOnline").innerText = data.online;
+            document.getElementById("qtdOffline").innerText = data.offline;
+
+            const tabela = document.getElementById("tabelaRelatorio");
+            tabela.innerHTML = "";
+
+            data.colaboradores.forEach(c => {
+                const online = c.status === "online";
+                tabela.innerHTML += `
+                <tr>
+                    <td>${c.nome}</td>
+                    <td>${c.empresa || '—'}</td>
+                    <td>${c.horario || '—'}</td>
+                    <td>
+                        <span class="badge ${online ? 'badge-online' : 'badge-offline'}">
+                            ${online ? '● Online' : '● Offline'}
+                        </span>
+                    </td>
+                    <td>${c.ultimo_acesso || '—'}</td>
+                </tr>`;
+            });
+        }
+
+        carregarRelatorio();
+    </script>
+
+</body>
+</html>

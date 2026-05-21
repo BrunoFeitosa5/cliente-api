@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status — Apoio Renov</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="container mt-4">
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-dark px-3 nav-custom">
+        <span class="logo-sistema">♻️ Time de Apoio Renov Smart</span>
+        <span class="sub-titulo ms-auto">Status da Equipe</span>
+    </nav>
+
+    <!-- NAV PÁGINAS -->
+    <div class="nav-pages mt-3">
+        <a href="/" class="nav-link-page">Painel</a>
+        <a href="/status" class="nav-link-page active">Status</a>
+        <a href="/relatorios" class="nav-link-page">Relatórios</a>
+        <a href="/colaborador" class="nav-link-page">Área do Colaborador</a>
+    </div>
+
+    <!-- RESUMO -->
+    <div class="row mt-4 text-center">
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h6 class="verde">Total</h6>
+                <h2 class="verde" id="total">0</h2>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h6 style="color:#00ff88">Online</h6>
+                <h2 style="color:#00ff88" id="qtdOnline">0</h2>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h6 style="color:#666">Offline</h6>
+                <h2 style="color:#666" id="qtdOffline">0</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARDS STATUS -->
+    <div class="row mt-4" id="cardsStatus"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        async function carregarStatus() {
+            const res = await fetch("/clientes");
+            const data = await res.json();
+            const clientes = data.clientes;
+
+            document.getElementById("total").innerText = clientes.length;
+            document.getElementById("qtdOnline").innerText = clientes.filter(c => c.status === "online").length;
+            document.getElementById("qtdOffline").innerText = clientes.filter(c => c.status !== "online").length;
+
+            const cards = document.getElementById("cardsStatus");
+            cards.innerHTML = "";
+
+            const sorted = [...clientes].sort((a, b) => {
+                if (a.status === "online" && b.status !== "online") return -1;
+                if (a.status !== "online" && b.status === "online") return 1;
+                return a.nome.localeCompare(b.nome);
+            });
+
+            sorted.forEach(c => {
+                const online = c.status === "online";
+                const iniciais = c.nome.split(" ").map(n => n[0]).slice(0, 2).join("").toUpperCase();
+
+                cards.innerHTML += `
+                <div class="col-md-4 col-sm-6 mb-3">
+                    <div class="card status-card p-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="avatar-circle ${online ? 'avatar-online' : 'avatar-offline'}">${iniciais}</div>
+                            <div class="text-start flex-grow-1">
+                                <div class="status-nome">${c.nome}</div>
+                                <div class="status-empresa">${c.empresa || '—'}</div>
+                                <div class="status-horario">${c.horario || '—'}</div>
+                            </div>
+                            <div class="text-center">
+                                <span class="status-dot ${online ? 'dot-online' : 'dot-offline'}"></span>
+                                <div class="status-label ${online ? 'label-online' : 'label-offline'}">${online ? 'Online' : 'Offline'}</div>
+                            </div>
+                        </div>
+                        ${c.ultimo_acesso ? `<div class="status-acesso mt-2">Último acesso: ${c.ultimo_acesso}</div>` : ''}
+                    </div>
+                </div>`;
+            });
+        }
+
+        carregarStatus();
+        setInterval(carregarStatus, 30000);
+    </script>
+
+</body>
+</html>

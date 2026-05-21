@@ -32,6 +32,21 @@ def painel():
     return send_from_directory("frontend", "index.html")
 
 
+@app.route("/status")
+def status_page():
+    return send_from_directory("frontend", "status.html")
+
+
+@app.route("/relatorios")
+def relatorios_page():
+    return send_from_directory("frontend", "relatorios.html")
+
+
+@app.route("/colaborador")
+def colaborador_page():
+    return send_from_directory("frontend", "colaborador.html")
+
+
 # Arquivos do frontend
 @app.route("/<path:arquivo>")
 def arquivos_front(arquivo):

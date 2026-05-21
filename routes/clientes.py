@@ -1,8 +1,10 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import (
     create_access_token,
-    jwt_required
+    jwt_required,
+    get_jwt_identity
 )
+from datetime import datetime
 
 from database.db import get_connection
 from models.cliente import validar_cliente
@@ -223,6 +225,93 @@ def deletar_cliente(id):
     conn.close()
 
     return jsonify({"mensagem": "Cliente removido"})
+
+
+# =============================================================
+# COLABORADOR — LOGIN (marca como online)
+# =============================================================
+@clientes_bp.route("/colaborador/login", methods=["POST"])
+def colaborador_login():
+
+    data = request.get_json()
+    email = data.get("email")
+    senha = data.get("senha")
+
+    conn = get_connection()
+    cliente = conn.execute(
+        "SELECT * FROM clientes WHERE email=?", (email,)
+    ).fetchone()
+
+    if not cliente:
+        conn.close()
+        return jsonify({"erro": "Usuário não encontrado"}), 404
+
+    cliente = dict(cliente)
+
+    if not bcrypt.checkpw(senha.encode("utf-8"), cliente["senha"].encode("utf-8")):
+        conn.close()
+        return jsonify({"erro": "Senha inválida"}), 401
+
+    agora = datetime.now().strftime("%d/%m/%Y %H:%M")
+
+    conn.execute(
+        "UPDATE clientes SET status='online', ultimo_acesso=? WHERE id=?",
+        (agora, cliente["id"])
+    )
+    conn.commit()
+    conn.close()
+
+    access_token = create_access_token(identity=str(cliente["id"]))
+
+    return jsonify({
+        "access_token": access_token,
+        "nome": cliente["nome"],
+        "id": cliente["id"]
+    }), 200
+
+
+# =============================================================
+# COLABORADOR — LOGOUT (marca como offline)
+# =============================================================
+@clientes_bp.route("/colaborador/logout", methods=["POST"])
+@jwt_required()
+def colaborador_logout():
+
+    user_id = get_jwt_identity()
+
+    conn = get_connection()
+    conn.execute("UPDATE clientes SET status='offline' WHERE id=?", (user_id,))
+    conn.commit()
+    conn.close()
+
+    return jsonify({"mensagem": "Offline"}), 200
+
+
+# =============================================================
+# RELATÓRIOS
+# =============================================================
+@clientes_bp.route("/api/relatorios", methods=["GET"])
+def relatorios():
+
+    conn = get_connection()
+
+    total = conn.execute("SELECT COUNT(*) as t FROM clientes").fetchone()["t"]
+    online = conn.execute("SELECT COUNT(*) as t FROM clientes WHERE status='online'").fetchone()["t"]
+
+    recentes = conn.execute("""
+        SELECT id, nome, empresa, horario, status, ultimo_acesso
+        FROM clientes
+        ORDER BY CASE WHEN status='online' THEN 0 ELSE 1 END, nome
+    """).fetchall()
+
+    conn.close()
+
+    return jsonify({
+        "total": total,
+        "online": online,
+        "offline": total - online,
+        "colaboradores": [dict(r) for r in recentes]
+    })
 
 
 # =============================================================

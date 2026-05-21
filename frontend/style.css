@@ -264,3 +264,159 @@ button.btn-danger {
 #toast .toast-body {
     font-size: 14px;
 }
+
+/* =========================
+   NAV PÁGINAS
+   ========================= */
+.nav-pages {
+    display: flex;
+    gap: 4px;
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 10px;
+    padding: 6px;
+    flex-wrap: wrap;
+}
+
+.nav-link-page {
+    color: #666;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 16px;
+    border-radius: 7px;
+    transition: all 0.15s;
+}
+
+.nav-link-page:hover {
+    color: #fff;
+    background: #1e1e1e;
+}
+
+.nav-link-page.active {
+    color: #000;
+    background: #00ff88;
+    font-weight: 600;
+}
+
+/* =========================
+   STATUS — CARDS
+   ========================= */
+.status-card {
+    text-align: left;
+}
+
+.avatar-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.avatar-online {
+    background: rgba(0, 255, 136, 0.1);
+    color: #00ff88;
+    border: 2px solid #00ff88;
+}
+
+.avatar-offline {
+    background: rgba(255, 255, 255, 0.03);
+    color: #444;
+    border: 2px solid #2a2a2a;
+}
+
+.status-nome {
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.status-empresa {
+    color: #888;
+    font-size: 12px;
+}
+
+.status-horario {
+    color: #555;
+    font-size: 11px;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: block;
+    margin: 0 auto 4px;
+}
+
+.dot-online {
+    background: #00ff88;
+    box-shadow: 0 0 6px rgba(0, 255, 136, 0.7);
+}
+
+.dot-offline {
+    background: #333;
+}
+
+.label-online {
+    color: #00ff88;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.label-offline {
+    color: #555;
+    font-size: 11px;
+}
+
+.status-acesso {
+    color: #555;
+    font-size: 11px;
+    border-top: 1px solid #222;
+    padding-top: 8px;
+    margin-top: 4px;
+}
+
+/* =========================
+   BADGES RELATÓRIO
+   ========================= */
+.badge-online {
+    background-color: rgba(0, 255, 136, 0.15);
+    color: #00ff88;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+.badge-offline {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #555;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+/* =========================
+   COLABORADOR — PULSE ONLINE
+   ========================= */
+.online-pulse {
+    width: 28px;
+    height: 28px;
+    background: #00ff88;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.5); }
+    70%  { box-shadow: 0 0 0 16px rgba(0, 255, 136, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
+}
