@@ -26,6 +26,7 @@ function mostrarToast(msg, tipo = "sucesso") {
 function atualizarUI(logado) {
     document.getElementById("loginBox").style.display = logado ? "none" : "block";
     document.getElementById("areaAdmin").style.display = logado ? "block" : "none";
+    document.getElementById("areaEscala").style.display = logado ? "block" : "none";
     document.getElementById("containerSair").style.display = logado ? "block" : "none";
 }
 
@@ -206,6 +207,47 @@ async function deletarCliente(id) {
 
     mostrarToast("Colaborador excluído.", "aviso");
     carregarClientes();
+}
+
+
+/* =========================
+   IMPORTAR ESCALA
+   ========================= */
+async function importarEscala() {
+    const token = localStorage.getItem("token");
+    const mes = parseInt(document.getElementById("escMes").value);
+    const ano = parseInt(document.getElementById("escAno").value);
+    const texto = document.getElementById("escTexto").value;
+
+    if (!texto.trim()) {
+        mostrarToast("Cole o conteúdo da planilha primeiro.", "aviso");
+        return;
+    }
+
+    const res = await fetch("/admin/escala/importar", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ texto, mes, ano })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+        mostrarToast(data.erro || "Erro ao importar", "erro");
+        return;
+    }
+
+    let msg = `${data.salvos} entrada(s) importada(s).`;
+    if (data.nao_encontrados.length > 0) {
+        msg += ` Não encontrados: ${data.nao_encontrados.join(", ")}.`;
+    }
+
+    document.getElementById("escResultado").innerHTML =
+        `<small style="color:#00ff88;">${msg}</small>`;
+    mostrarToast("Escala importada com sucesso!");
 }
 
 

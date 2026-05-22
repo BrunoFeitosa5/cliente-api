@@ -5,3 +5,5 @@ flask-cors
 bcrypt
 python-dotenv
 anthropic
+google-genai
+groq

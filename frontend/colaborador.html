@@ -42,7 +42,7 @@
         <div class="login-form-inner">
             <div class="login-icon">👤</div>
             <h5 class="verde mt-2 mb-0">Área do Colaborador</h5>
-            <small style="color:#555;">Entre para marcar sua presença</small>
+            <small style="color:#555;">Entre para acessar sua área</small>
             <hr class="login-divider">
             <input id="colabEmail" class="form-control mt-2" placeholder="Email" type="email">
             <input id="colabSenha" type="password" class="form-control mt-2" placeholder="Senha">
@@ -50,13 +50,88 @@
         </div>
     </div>
 
-    <!-- ÁREA ONLINE -->
-    <div class="card mt-4 p-4 text-center" id="areaOnline" style="display:none;">
-        <div class="online-pulse mx-auto mb-3"></div>
-        <h4 class="verde" id="nomeOnline">—</h4>
-        <p style="color:#666; font-size:14px;">Você está online e visível para a equipe.</p>
-        <button class="btn btn-danger mt-2" onclick="sairColab()">Encerrar Presença</button>
+    <!-- ÁREA LOGADO -->
+    <div id="areaLogado" style="display:none;">
+
+        <!-- STATUS BAR -->
+        <div class="card mt-4 p-3">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="online-pulse" style="width:16px;height:16px;"></div>
+                    <span class="verde fw-bold fs-5" id="nomeOnline">—</span>
+                    <small style="color:#555;">online agora</small>
+                </div>
+                <button class="btn btn-danger btn-sm px-3" onclick="sairColab()">Encerrar presença</button>
+            </div>
+        </div>
+
+        <!-- ABAS -->
+        <div class="nav-pages mt-3">
+            <a href="#" class="nav-link-page nav-link-aba active" id="tabEscala" onclick="mostrarAba('Escala')">Minha Escala</a>
+            <a href="#" class="nav-link-page nav-link-aba" id="tabColegas" onclick="mostrarAba('Colegas')">Colegas Online</a>
+            <a href="#" class="nav-link-page nav-link-aba" id="tabPerfil" onclick="mostrarAba('Perfil')">Meu Perfil</a>
+            <a href="#" class="nav-link-page nav-link-aba" id="tabSenha" onclick="mostrarAba('Senha')">Trocar Senha</a>
+            <a href="#" class="nav-link-page nav-link-aba" id="tabIa" onclick="mostrarAba('Ia')">Chat IA</a>
+        </div>
+
+        <!-- ABA: ESCALA -->
+        <div id="abaEscala" class="aba-content mt-3">
+            <div class="card p-3">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <button class="btn-nav-mes" onclick="mudarMes(-1)">&#9664;</button>
+                    <h6 class="verde mb-0" id="tituloEscala">—</h6>
+                    <button class="btn-nav-mes" onclick="mudarMes(1)">&#9654;</button>
+                </div>
+                <div id="tabelaEscala">
+                    <p style="color:#555; text-align:center; font-size:14px;">Carregando...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA: COLEGAS -->
+        <div id="abaColegas" class="aba-content mt-3" style="display:none;">
+            <div id="listaColegas" class="row g-3"></div>
+        </div>
+
+        <!-- ABA: PERFIL -->
+        <div id="abaPerfil" class="aba-content mt-3" style="display:none;">
+            <div class="card p-4" style="max-width:480px; margin:0 auto;">
+                <h6 class="verde mb-3">Meus Dados</h6>
+                <input id="pfNome" class="form-control mt-2" placeholder="Nome">
+                <input id="pfEmail" class="form-control mt-2" placeholder="Email" disabled style="opacity:.4;">
+                <input id="pfTelefone" class="form-control mt-2" placeholder="Telefone">
+                <input id="pfHorario" class="form-control mt-2" placeholder="Horário">
+                <button class="btn btn-success mt-3 w-100" onclick="salvarPerfil()">Salvar Alterações</button>
+            </div>
+        </div>
+
+        <!-- ABA: SENHA -->
+        <div id="abaSenha" class="aba-content mt-3" style="display:none;">
+            <div class="card p-4" style="max-width:480px; margin:0 auto;">
+                <h6 class="verde mb-3">Trocar Senha</h6>
+                <input id="snAtual" type="password" class="form-control mt-2" placeholder="Senha atual">
+                <input id="snNova" type="password" class="form-control mt-2" placeholder="Nova senha">
+                <input id="snConfirma" type="password" class="form-control mt-2" placeholder="Confirmar nova senha">
+                <button class="btn btn-success mt-3 w-100" onclick="trocarSenha()">Alterar Senha</button>
+            </div>
+        </div>
+
+        <!-- ABA: IA -->
+        <div id="abaIa" class="aba-content mt-3" style="display:none;">
+            <div class="card p-3">
+                <h6 class="verde mb-3">Assistente IA</h6>
+                <div id="chatHistorico" class="chat-area"></div>
+                <div class="d-flex gap-2 mt-2">
+                    <input id="chatInput" class="form-control" placeholder="Digite sua mensagem..."
+                        onkeydown="if(event.key==='Enter') enviarMensagemIA()">
+                    <button class="btn btn-success px-3" onclick="enviarMensagemIA()">Enviar</button>
+                </div>
+            </div>
+        </div>
+
     </div>
+
+    <div style="height:40px;"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="colaborador.js"></script>

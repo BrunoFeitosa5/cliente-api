@@ -405,6 +405,94 @@ button.btn-danger {
 }
 
 /* =========================
+   TÍTULO BRANCO (cards admin)
+   ========================= */
+.titulo-branco {
+    color: #fff;
+    font-weight: 600;
+}
+
+/* =========================
+   BOTÃO NAVEGAÇÃO MÊS
+   ========================= */
+.btn-nav-mes {
+    background: #1e1e1e;
+    border: 1px solid #333;
+    color: #00ff88;
+    border-radius: 8px;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.15s;
+}
+
+.btn-nav-mes:hover {
+    background: #2a2a2a;
+}
+
+/* =========================
+   ESCALA — BADGES
+   ========================= */
+.badge-folga {
+    background: rgba(255, 59, 59, 0.12);
+    color: #ff6b6b;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.badge-normal {
+    background: rgba(0, 255, 136, 0.1);
+    color: #00ff88;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 20px;
+}
+
+/* =========================
+   CHAT IA
+   ========================= */
+.chat-area {
+    min-height: 240px;
+    max-height: 360px;
+    overflow-y: auto;
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.msg-user {
+    align-self: flex-end;
+    background: #00ff88;
+    color: #000;
+    padding: 8px 14px;
+    border-radius: 16px 16px 2px 16px;
+    max-width: 80%;
+    font-size: 14px;
+    font-weight: 500;
+    word-wrap: break-word;
+}
+
+.msg-ia {
+    align-self: flex-start;
+    background: #1e1e1e;
+    color: #ccc;
+    padding: 8px 14px;
+    border-radius: 16px 16px 16px 2px;
+    max-width: 80%;
+    font-size: 14px;
+    border: 1px solid #2a2a2a;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* =========================
    COLABORADOR — PULSE ONLINE
    ========================= */
 .online-pulse {

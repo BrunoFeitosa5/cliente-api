@@ -26,6 +26,19 @@ def init_db():
         )
     """)
 
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS escalas (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            colaborador_id INTEGER NOT NULL,
+            data TEXT NOT NULL,
+            horario_entrada TEXT NOT NULL,
+            horario_saida TEXT NOT NULL,
+            horas_extras INTEGER DEFAULT 0,
+            folga INTEGER DEFAULT 0,
+            FOREIGN KEY (colaborador_id) REFERENCES clientes(id)
+        )
+    """)
+
     for col, definition in [("status", "TEXT DEFAULT 'offline'"), ("ultimo_acesso", "TEXT")]:
         try:
             cursor.execute(f"ALTER TABLE clientes ADD COLUMN {col} {definition}")
