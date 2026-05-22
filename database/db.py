@@ -39,7 +39,11 @@ def init_db():
         )
     """)
 
-    for col, definition in [("status", "TEXT DEFAULT 'offline'"), ("ultimo_acesso", "TEXT")]:
+    for col, definition in [
+        ("status", "TEXT DEFAULT 'offline'"),
+        ("ultimo_acesso", "TEXT"),
+        ("is_admin", "INTEGER DEFAULT 0")
+    ]:
         try:
             cursor.execute(f"ALTER TABLE clientes ADD COLUMN {col} {definition}")
         except Exception:

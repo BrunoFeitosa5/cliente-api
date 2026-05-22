@@ -111,6 +111,9 @@ def login():
 
     cliente = dict(cliente)
 
+    if not cliente.get("is_admin"):
+        return jsonify({"erro": "Acesso restrito. Use a Área do Colaborador."}), 403
+
     senha_hash = cliente["senha"].encode("utf-8")
 
     if not bcrypt.checkpw(
