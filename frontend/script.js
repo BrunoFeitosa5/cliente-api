@@ -26,8 +26,10 @@ function mostrarToast(msg, tipo = "sucesso") {
 function atualizarUI(logado) {
     document.getElementById("loginBox").style.display = logado ? "none" : "block";
     document.getElementById("areaAdmin").style.display = logado ? "block" : "none";
+    document.getElementById("areaFaq").style.display = logado ? "block" : "none";
     document.getElementById("areaEscala").style.display = logado ? "block" : "none";
     document.getElementById("containerSair").style.display = logado ? "block" : "none";
+    if (logado) carregarFaq();
 }
 
 
@@ -207,6 +209,140 @@ async function deletarCliente(id) {
 
     mostrarToast("Colaborador excluído.", "aviso");
     carregarClientes();
+}
+
+
+/* =========================
+   BASE DE CONHECIMENTO (FAQ)
+   ========================= */
+let faqDados = [];
+
+async function carregarFaq() {
+    const res = await fetch("/faq");
+    const data = await res.json();
+    faqDados = data.faq || [];
+    renderizarFaq(faqDados);
+}
+
+function filtrarFaq() {
+    const busca = document.getElementById("faqBusca").value.toLowerCase();
+    const filtrado = faqDados.filter(f =>
+        f.pergunta.toLowerCase().includes(busca) ||
+        f.resposta.toLowerCase().includes(busca) ||
+        f.categoria.toLowerCase().includes(busca)
+    );
+    renderizarFaq(filtrado);
+}
+
+function renderizarFaq(lista) {
+    const container = document.getElementById("listaFaq");
+
+    if (!lista.length) {
+        container.innerHTML = `<p style="color:#555; font-size:14px;">Nenhuma entrada cadastrada.</p>`;
+        return;
+    }
+
+    const categorias = [...new Set(lista.map(f => f.categoria))];
+
+    container.innerHTML = categorias.map(cat => `
+        <div class="mb-4">
+            <div class="faq-categoria-label">${cat}</div>
+            ${lista.filter(f => f.categoria === cat).map(f => `
+            <div class="faq-card">
+                <div class="faq-pergunta">❓ ${f.pergunta}</div>
+                <div class="faq-resposta">${f.resposta}</div>
+                ${f.imagem_url ? `<img src="${f.imagem_url}" class="faq-imagem" onerror="this.style.display='none'">` : ''}
+                <div class="d-flex gap-2 mt-2">
+                    <button class="btn btn-warning btn-sm" onclick="editarFaq(${f.id})">Editar</button>
+                    <button class="btn btn-danger btn-sm" onclick="deletarFaq(${f.id})">Excluir</button>
+                </div>
+            </div>`).join('')}
+        </div>
+    `).join('');
+}
+
+function toggleFormFaq() {
+    const form = document.getElementById("formFaq");
+    form.style.display = form.style.display === "none" ? "block" : "none";
+    cancelarFaq();
+}
+
+function cancelarFaq() {
+    document.getElementById("faqId").value = "";
+    document.getElementById("faqPergunta").value = "";
+    document.getElementById("faqResposta").value = "";
+    document.getElementById("faqCategoria").value = "";
+    document.getElementById("faqImagem").value = "";
+}
+
+function editarFaq(id) {
+    const f = faqDados.find(x => x.id === id);
+    if (!f) return;
+
+    document.getElementById("faqId").value = f.id;
+    document.getElementById("faqPergunta").value = f.pergunta;
+    document.getElementById("faqResposta").value = f.resposta;
+    document.getElementById("faqCategoria").value = f.categoria;
+    document.getElementById("faqImagem").value = f.imagem_url || "";
+    document.getElementById("formFaq").style.display = "block";
+    document.getElementById("formFaq").scrollIntoView({ behavior: "smooth" });
+}
+
+async function salvarFaq() {
+    const token = localStorage.getItem("token");
+    const id = document.getElementById("faqId").value;
+    const body = {
+        pergunta: document.getElementById("faqPergunta").value,
+        resposta: document.getElementById("faqResposta").value,
+        categoria: document.getElementById("faqCategoria").value || "Geral",
+        imagem_url: document.getElementById("faqImagem").value
+    };
+
+    if (!body.pergunta || !body.resposta) {
+        mostrarToast("Preencha a pergunta e a resposta.", "aviso");
+        return;
+    }
+
+    const url = id ? `/admin/faq/${id}` : "/admin/faq";
+    const method = id ? "PUT" : "POST";
+
+    const res = await fetch(url, {
+        method,
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(body)
+    });
+
+    if (!res.ok) {
+        mostrarToast("Erro ao salvar.", "erro");
+        return;
+    }
+
+    cancelarFaq();
+    document.getElementById("formFaq").style.display = "none";
+    mostrarToast(id ? "Entrada atualizada!" : "Entrada criada!");
+    carregarFaq();
+}
+
+async function deletarFaq(id) {
+    if (!confirm("Excluir esta entrada da base de conhecimento?")) return;
+
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(`/admin/faq/${id}`, {
+        method: "DELETE",
+        headers: { "Authorization": `Bearer ${token}` }
+    });
+
+    if (!res.ok) {
+        mostrarToast("Erro ao excluir.", "erro");
+        return;
+    }
+
+    mostrarToast("Entrada removida.", "aviso");
+    carregarFaq();
 }
 
 

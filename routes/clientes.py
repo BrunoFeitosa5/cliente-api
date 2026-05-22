@@ -402,28 +402,138 @@ def ia():
         return jsonify({"erro": "Prompt vazio"}), 400
 
     try:
+        conn = get_connection()
+        faqs = conn.execute("SELECT pergunta, resposta, categoria, imagem_url FROM faq").fetchall()
+        conn.close()
+
+        contexto_faq = ""
+        imagem_resposta = None
+
+        if faqs:
+            contexto_faq = "\n\n".join([
+                f"[{f['categoria']}] P: {f['pergunta']}\nR: {f['resposta']}"
+                for f in faqs
+            ])
+
+            prompt_lower = prompt.lower()
+            for f in faqs:
+                palavras = f['pergunta'].lower().split()
+                if sum(1 for p in palavras if p in prompt_lower) >= 2:
+                    if f['imagem_url']:
+                        imagem_resposta = f['imagem_url']
+                    break
+
+        system_prompt = (
+            "Você é um assistente interno da Renov Troca Inteligente. "
+            "Ajuda os colaboradores com dúvidas sobre processos, critérios de avaliação de aparelhos, "
+            "vouchers, trocas e procedimentos internos. "
+            "Responda sempre em português brasileiro, de forma direta e objetiva. "
+            "Se a dúvida estiver na base de conhecimento abaixo, use ela como referência principal."
+        )
+
+        if contexto_faq:
+            system_prompt += f"\n\nBASE DE CONHECIMENTO RENOV:\n{contexto_faq}"
+
         response = groq_client.chat.completions.create(
             model="llama-3.1-8b-instant",
-            max_tokens=400,
-            temperature=0.5,
+            max_tokens=500,
+            temperature=0.4,
             messages=[
-                {
-                    "role": "system",
-                    "content": (
-                        "Você é um assistente de pesquisa da equipe Apoio Renov Smart. "
-                        "Responda apenas perguntas informativas, de pesquisa ou dúvidas do dia a dia. "
-                        "Seja direto e conciso. Não execute tarefas complexas, não escreva código, "
-                        "não crie documentos longos. Responda sempre em português brasileiro."
-                    )
-                },
+                {"role": "system", "content": system_prompt},
                 {"role": "user", "content": prompt}
             ]
         )
-        return jsonify({"resposta": response.choices[0].message.content})
+
+        return jsonify({
+            "resposta": response.choices[0].message.content,
+            "imagem": imagem_resposta
+        })
 
     except Exception as e:
         print("ERRO IA:", e)
         return jsonify({"erro": str(e)}), 500
+
+
+# =============================================================
+# FAQ — LISTAR
+# =============================================================
+@clientes_bp.route("/faq", methods=["GET"])
+def listar_faq():
+    conn = get_connection()
+    categoria = request.args.get("categoria")
+
+    if categoria:
+        rows = conn.execute(
+            "SELECT * FROM faq WHERE categoria=? ORDER BY categoria, id",
+            (categoria,)
+        ).fetchall()
+    else:
+        rows = conn.execute("SELECT * FROM faq ORDER BY categoria, id").fetchall()
+
+    conn.close()
+    return jsonify({"faq": [dict(r) for r in rows]})
+
+
+# =============================================================
+# FAQ — CRIAR
+# =============================================================
+@clientes_bp.route("/admin/faq", methods=["POST"])
+@jwt_required()
+def criar_faq():
+    data = request.get_json()
+
+    conn = get_connection()
+    conn.execute("""
+        INSERT INTO faq (pergunta, resposta, categoria, imagem_url)
+        VALUES (?, ?, ?, ?)
+    """, (
+        data.get("pergunta"),
+        data.get("resposta"),
+        data.get("categoria", "Geral"),
+        data.get("imagem_url") or None
+    ))
+    conn.commit()
+    conn.close()
+
+    return jsonify({"mensagem": "Entrada criada"}), 201
+
+
+# =============================================================
+# FAQ — EDITAR
+# =============================================================
+@clientes_bp.route("/admin/faq/<int:id>", methods=["PUT"])
+@jwt_required()
+def editar_faq(id):
+    data = request.get_json()
+
+    conn = get_connection()
+    conn.execute("""
+        UPDATE faq SET pergunta=?, resposta=?, categoria=?, imagem_url=? WHERE id=?
+    """, (
+        data.get("pergunta"),
+        data.get("resposta"),
+        data.get("categoria", "Geral"),
+        data.get("imagem_url") or None,
+        id
+    ))
+    conn.commit()
+    conn.close()
+
+    return jsonify({"mensagem": "Entrada atualizada"})
+
+
+# =============================================================
+# FAQ — EXCLUIR
+# =============================================================
+@clientes_bp.route("/admin/faq/<int:id>", methods=["DELETE"])
+@jwt_required()
+def excluir_faq(id):
+    conn = get_connection()
+    conn.execute("DELETE FROM faq WHERE id=?", (id,))
+    conn.commit()
+    conn.close()
+
+    return jsonify({"mensagem": "Entrada removida"})
 
 
 # =============================================================

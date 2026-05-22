@@ -89,6 +89,35 @@
         <button class="btn btn-success mt-3" onclick="criarCliente()">Adicionar</button>
     </div>
 
+    <!-- BASE DE CONHECIMENTO -->
+    <div class="card p-3 mt-4" id="areaFaq" style="display:none;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="titulo-branco mb-0">Base de Conhecimento</h5>
+            <button class="btn btn-success btn-sm px-3" onclick="toggleFormFaq()">+ Nova</button>
+        </div>
+
+        <!-- Formulário -->
+        <div id="formFaq" class="card p-3 mb-3" style="display:none; background:#111;">
+            <input id="faqId" type="hidden" value="">
+            <input id="faqPergunta" class="form-control mt-2" placeholder="Pergunta">
+            <textarea id="faqResposta" class="form-control mt-2" rows="4" placeholder="Resposta completa"></textarea>
+            <input id="faqCategoria" class="form-control mt-2" placeholder="Categoria (ex: Celulares, Vouchers, Processos)">
+            <input id="faqImagem" class="form-control mt-2" placeholder="URL da imagem (opcional)">
+            <div class="d-flex gap-2 mt-3">
+                <button class="btn btn-success" onclick="salvarFaq()">Salvar</button>
+                <button class="btn btn-secondary" onclick="cancelarFaq()">Cancelar</button>
+            </div>
+        </div>
+
+        <!-- Filtro por categoria -->
+        <div class="d-flex gap-2 mb-3">
+            <input id="faqBusca" class="form-control" placeholder="Buscar por palavra..." oninput="filtrarFaq()">
+        </div>
+
+        <!-- Lista -->
+        <div id="listaFaq"></div>
+    </div>
+
     <!-- IMPORTAR ESCALA -->
     <div class="card p-3 mt-4" id="areaEscala" style="display:none;">
         <h5 class="titulo-branco">Importar Escala</h5>

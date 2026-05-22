@@ -328,6 +328,7 @@ async function enviarMensagemIA() {
     adicionarMensagem(msg, 'user');
 
     const token = localStorage.getItem("colabToken");
+    const loadingDiv = adicionarMensagem("Digitando...", 'ia', null, true);
 
     try {
         const res = await fetch("/ia", {
@@ -340,26 +341,44 @@ async function enviarMensagemIA() {
         });
 
         const data = await res.json();
+        loadingDiv.remove();
 
         if (!res.ok) {
             adicionarMensagem("Erro ao obter resposta.", 'ia');
             return;
         }
 
-        adicionarMensagem(data.resposta, 'ia');
+        adicionarMensagem(data.resposta, 'ia', data.imagem || null);
     } catch {
+        loadingDiv.remove();
         adicionarMensagem("Erro de conexão.", 'ia');
     }
 }
 
 
-function adicionarMensagem(texto, tipo) {
+function adicionarMensagem(texto, tipo, imagem = null, loading = false) {
     const area = document.getElementById("chatHistorico");
     const div = document.createElement("div");
     div.className = tipo === 'user' ? 'msg-user' : 'msg-ia';
+
+    if (loading) {
+        div.style.opacity = "0.5";
+        div.style.fontStyle = "italic";
+    }
+
     div.textContent = texto;
+
+    if (imagem) {
+        const img = document.createElement("img");
+        img.src = imagem;
+        img.style.cssText = "max-width:100%;border-radius:8px;margin-top:8px;display:block;";
+        img.onerror = () => img.remove();
+        div.appendChild(img);
+    }
+
     area.appendChild(div);
     area.scrollTop = area.scrollHeight;
+    return div;
 }
 
 

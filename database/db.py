@@ -27,6 +27,17 @@ def init_db():
     """)
 
     cursor.execute("""
+        CREATE TABLE IF NOT EXISTS faq (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            pergunta TEXT NOT NULL,
+            resposta TEXT NOT NULL,
+            categoria TEXT DEFAULT 'Geral',
+            imagem_url TEXT,
+            created_at TEXT DEFAULT (datetime('now', 'localtime'))
+        )
+    """)
+
+    cursor.execute("""
         CREATE TABLE IF NOT EXISTS escalas (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             colaborador_id INTEGER NOT NULL,

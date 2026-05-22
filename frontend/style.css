@@ -405,6 +405,56 @@ button.btn-danger {
 }
 
 /* =========================
+   BASE DE CONHECIMENTO (FAQ)
+   ========================= */
+.faq-categoria-label {
+    color: #00ff88;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    padding: 4px 10px;
+    background: rgba(0,255,136,0.08);
+    border-radius: 6px;
+    display: inline-block;
+}
+
+.faq-card {
+    background: #111;
+    border: 1px solid #2a2a2a;
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 10px;
+    transition: border-color 0.2s;
+}
+
+.faq-card:hover {
+    border-color: #3a3a3a;
+}
+
+.faq-pergunta {
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.faq-resposta {
+    color: #aaa;
+    font-size: 13px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+.faq-imagem {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-top: 10px;
+    border: 1px solid #2a2a2a;
+}
+
+/* =========================
    TÍTULO BRANCO (cards admin)
    ========================= */
 .titulo-branco {
