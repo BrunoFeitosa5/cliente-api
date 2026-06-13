@@ -49,4 +49,3 @@ client-api/
 ```bash
 git clone https://github.com/BrunoFeitosa5/cliente-api.git
 
-Treino Git e Gitub
